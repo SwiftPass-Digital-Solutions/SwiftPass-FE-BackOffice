@@ -1,0 +1,47 @@
+<div class="max-w-lg mx-auto h-full flex flex-col justify-center gap-8">
+    <div class="w-full flex justify-center">
+        <app-logo />
+    </div>
+
+    <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1">
+            <h3 class="text-2xl mb-1">Enter OTP</h3>
+            <p class="text-neutral-dark-300 text-base">Enter the six digits OTP we sent to your email - <span class="text-neutral-dark-1000">{{ user()?.email }}</span></p>
+        </div>
+
+        <ng-otp-input
+            (onInputChange)="onOtpChange($event)"
+            [config]="{
+                length: 6,
+                allowNumbersOnly: true,
+                inputStyles: {
+                    fontSize: '16px',
+                    color: '#9F9F9F',
+                    border: '1px solid #E6E6E6',
+                    borderRadius: '12px',
+                    outline: 'none'
+                }
+            }"
+        ></ng-otp-input>
+
+        <p class="text-base text-neutral-dark-300">Didn’t receive a code? <span class="cursor-pointer underline" (click)="resendOtp()">Resend</span> in {{ countDown() }} seconds</p>
+    </div>
+
+    <div class="w-full flex items-stretch gap-3">
+        <app-button
+            class="flex-1"
+            type="secondary"
+            (click)="goBack()" 
+        >
+            Back
+        </app-button>
+        <app-button
+            class="flex-1"
+            (click)="verify()"
+            [isLoading]="isLoading()"
+            [disabled]="otp().length !== 6"
+        >
+            Next
+        </app-button>
+    </div>
+</div>

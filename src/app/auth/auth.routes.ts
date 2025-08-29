@@ -18,6 +18,10 @@ export const routes: Routes = [
             {
                 path: 'register',
                 loadComponent: () => import('./register/register').then(m => m.Register)
+            },
+            {
+                path: 'otp',
+                loadComponent: () => import('./otp/otp').then(m => m.Otp)
             }
         ]
     }

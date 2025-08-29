@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+    /* fonts */
+
+    /* colors */
+    --color-primary-800: rgba(5, 23, 95, 1);
+    --color-primary-500: rgba(12, 57, 237, 1);
+    --color-primary-400: rgba(61, 97, 241, 1);
+
+    --color-neutral-dark-1000: rgba(3, 3, 3, 1);
+    --color-neutral-dark-700: rgba(16, 16, 16, 1);
+    --color-neutral-dark-600: rgba(220, 220, 220, 1);
+    --color-neutral-dark-500: rgba(250, 250, 250, 1);
+    --color-neutral-dark-400: rgba(251, 251, 251, 1);
+    --color-neutral-dark-300: rgba(85, 85, 85, 1);
+    --color-neutral-dark-200: rgba(115, 115, 115, 1);
+}
