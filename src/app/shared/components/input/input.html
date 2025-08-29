@@ -1,0 +1,32 @@
+@let showError = ngControl.invalid && (ngControl.dirty || ngControl.touched);
+
+<div class="input-wrapper">
+    @if(label()){
+        <label [for]="id()" class="text-sm">
+            {{ label() }} 
+            @if(required()){
+                <span class="text-red-600">*</span>
+            }
+        </label>
+    }
+    <div class="mt-1">
+        <input
+            [id]="id()"
+            [type]="type()"
+            [placeholder]="placeholder()"
+            [disabled]="disabled"
+            class="bg-grey-100 border rounded-lg p-3 w-full placeholder:text-gray-600 focus:placeholder:text-gray-500 outline-none transition-all duration-300"
+            [ngClass]="{
+                'border-grey-400 focus:border-primary': !showError,
+                'border-error focus:border-error': showError,
+            }"
+            (input)="onInput($event)"
+            (blur)="onTouched()"
+        />
+    </div>
+    @if(showError){
+        @for(message of errorMessages; let index = $index; track index;){
+            <p class="text-error text-xs mt-1">{{ message }}</p>
+        }
+    }
+</div>
