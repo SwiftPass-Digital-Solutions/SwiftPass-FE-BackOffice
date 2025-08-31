@@ -1,3 +1,18 @@
 svg {
     display: block;
 }
+
+.otp-input {
+    font-size: 16px !important;
+    color: #9F9F9F !important;
+    border: 1px solid #E6E6E6 !important;
+    border-radius: 12px !important;
+    outline: none !important;
+    width: 60px !important;
+    height: 55px !important;
+
+    @media (max-width: 410px) {
+        width: calc(100% / 5 - 10px) !important;
+        height: 45px !important;
+    }
+}
