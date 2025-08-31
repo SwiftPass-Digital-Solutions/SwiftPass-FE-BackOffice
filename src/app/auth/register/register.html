@@ -26,7 +26,10 @@
             placeholder="Enter your email"
         />
 
-        <p class="text-base text-dark-300">I have read, understood and agree to the <span class="text-primary-500 text-underline cursor-pointer">terms and conditions</span>, and <span class="text-primary-500 text-underline cursor-pointer">privacy policy</span></p>
+        <div class="flex items-start gap-2">
+            <input class="mt-1" type="checkbox" formControlName="terms" id="terms">
+            <p class="text-base text-dark-300">I have read, understood and agree to the <span class="text-primary-500 text-underline cursor-pointer">terms and conditions</span>, and <span class="text-primary-500 text-underline cursor-pointer">privacy policy</span></p>
+        </div>
     </form>
      <app-button
         (click)="initRegistration()"

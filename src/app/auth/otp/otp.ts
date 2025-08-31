@@ -66,7 +66,8 @@ export class Otp implements OnInit, AfterViewInit {
 
     this.authService.resendOTP(this.user()?.email as string)
     .subscribe({
-      next: () => {
+      next: (res) => {
+        this.trackingId.set(res.data);
         this.toast.success('OTP sent successfully');
       }
     })

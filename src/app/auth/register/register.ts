@@ -25,6 +25,7 @@ export class Register {
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
+    terms: [false, [Validators.requiredTrue]]
   });
 
   initRegistration(){
@@ -33,10 +34,9 @@ export class Register {
       return;
     }
 
+    const { terms, ...swiftPassUser } = this.registrationForm.value;
     const payload: RegisterUser = {
-      swiftPassUser: {
-        ...this.registrationForm.value,
-      },
+      swiftPassUser,
       userType: UserType.SwiftPassUser
     };
 

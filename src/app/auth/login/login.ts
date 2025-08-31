@@ -37,7 +37,7 @@ export class Login {
     .subscribe({
       next: (res) => {
         if(res.data.userType === UserType.SwiftPassUser){
-          this.router.navigate(['user', 'dashboard']);
+          this.router.navigate(['user', 'overview']);
         }
       }
     });

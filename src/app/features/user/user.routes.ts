@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { User } from './user';
-import { Dashboard } from './dashboard/dashboard';
+import { Overview } from './overview/overview';
 
 export const userRoutes: Routes = [
     {
@@ -10,11 +10,11 @@ export const userRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'dashboard'
+                redirectTo: 'overview'
             },
             {
-                path: 'dashboard',
-                component: Dashboard
+                path: 'overview',
+                component: Overview
             }
         ]
     }
