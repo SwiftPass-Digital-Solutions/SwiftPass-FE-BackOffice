@@ -68,6 +68,7 @@ export class Otp implements OnInit, AfterViewInit {
     .subscribe({
       next: (res) => {
         this.trackingId.set(res.data);
+        this.router.navigate(['otp', res.data]);
         this.toast.success('OTP sent successfully');
       }
     })

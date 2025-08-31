@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { LogoComponent } from '@shared/components/logo';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from "@shared/components/input/input";
@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [LogoComponent, ReactiveFormsModule, InputComponent, Button, RouterLink],
   templateUrl: './complete-registration.html',
 })
-export class CompleteRegistration {
+export class CompleteRegistration implements OnInit{
   private toast = inject(ToastrService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -58,6 +58,12 @@ export class CompleteRegistration {
       isValid: computed(() => /[^a-zA-Z0-9]/.test(this.password())),
     },
   ];
+
+  ngOnInit(): void {
+    if(!this.authService.getToken() || !this.user()?.email) {
+      this.router.navigate(['login']);
+    }
+  }
 
   completeRegistration() {
     if (!this.passwordForm.valid) {

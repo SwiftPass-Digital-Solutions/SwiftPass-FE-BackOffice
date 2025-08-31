@@ -8,5 +8,9 @@ export const routes: Routes = [
     {
         path: 'user',
         loadChildren: () => import('./features/user/user.routes').then(m => m.userRoutes)
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];
