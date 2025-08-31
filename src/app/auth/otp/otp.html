@@ -6,13 +6,13 @@
     <div class="flex flex-col gap-5">
         <div class="flex flex-col gap-1">
             <h3 class="text-2xl mb-1">Enter OTP</h3>
-            <p class="text-neutral-dark-300 text-base">Enter the six digits OTP we sent to your email - <span class="text-neutral-dark-1000">{{ user()?.email }}</span></p>
+            <p class="text-neutral-dark-300 text-base">Enter the six digits OTP we sent to your email - <span class="text-neutral-dark-1000 font-medium">{{ user()?.email }}</span></p>
         </div>
 
         <ng-otp-input
             (onInputChange)="onOtpChange($event)"
             [config]="{
-                length: 6,
+                length: 5,
                 allowNumbersOnly: true,
                 inputStyles: {
                     fontSize: '16px',
@@ -24,7 +24,14 @@
             }"
         ></ng-otp-input>
 
-        <p class="text-base text-neutral-dark-300">Didn’t receive a code? <span class="cursor-pointer underline" (click)="resendOtp()">Resend</span> in {{ countDown() }} seconds</p>
+        <p class="text-base text-neutral-dark-300">
+            Didn’t receive a code? 
+            @if(countDown() > 0){
+                <span class="cursor-pointer underline">Resend</span> in {{ countDown() }} seconds
+            }@else {
+                <span class="cursor-pointer text-primary-500 font-medium" (click)="resendOtp()">Resend OTP</span>
+            }
+        </p>
     </div>
 
     <div class="w-full flex items-stretch gap-3">
@@ -37,9 +44,9 @@
         </app-button>
         <app-button
             class="flex-1"
-            (click)="verify()"
+            (click)="confirm()"
             [isLoading]="isLoading()"
-            [disabled]="otp().length !== 6"
+            [disabled]="otp().length !== 5"
         >
             Next
         </app-button>

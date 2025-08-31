@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import { Auth } from './auth';
+import { Login } from './login/login';
+import { Otp } from './otp/otp';
+import { Register } from './register/register';
+import { CompleteRegistration } from './complete-registration/complete-registration';
 
 export const routes: Routes = [
     {
@@ -13,15 +17,19 @@ export const routes: Routes = [
             },
             {
                 path: 'login',
-                loadComponent: () => import('./login/login').then(m => m.Login)
+                component: Login
+            },
+            {
+                path: 'otp/:trackingId',
+                component: Otp
             },
             {
                 path: 'register',
-                loadComponent: () => import('./register/register').then(m => m.Register)
+                component: Register
             },
             {
-                path: 'otp',
-                loadComponent: () => import('./otp/otp').then(m => m.Otp)
+                path: 'complete-registration',
+                component: CompleteRegistration
             }
         ]
     }

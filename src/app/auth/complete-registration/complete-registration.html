@@ -1,0 +1,64 @@
+<div class="max-w-lg mx-auto h-full flex flex-col justify-center gap-8">
+    <div class="w-full flex justify-center">
+        <app-logo />
+    </div>
+    <div>
+        <h3 class="text-2xl mb-1">Create account</h3>
+        <p class="text-neutral-dark-300 text-base">One more step to total control over your identity data.</p>
+    </div>
+    <form class="flex flex-col gap-5" [formGroup]="passwordForm">
+        <app-input
+            label="Password"
+            formControlName="password"
+            type="password"
+            placeholder="Enter your password"
+        />
+        <app-input
+            label="Confirm Password"
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="Enter password one more time"
+        />
+
+        @if(
+            passwordForm.hasError('passwordMismatch') && passwordForm.touched
+            && passwordForm.get('confirmPassword')?.valid
+        ){
+            <p class="text-red-500 text-xs mt-[-6px]">Passwords do not match</p>
+        }
+
+        <div class="flex flex-col gap-3">
+            @for(criteria of passwordCriteria; track $index){
+                <div class="flex items-center gap-3">
+                    <div class="text-neutral-dark-200">
+                        <svg [class.text-green-600]="criteria.isValid()" width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.3499 8.65249C15.3499 4.5932 12.0592 1.30249 7.9999 1.30249C3.94061 1.30249 0.649902 4.5932 0.649902 8.65249C0.649902 12.7118 3.94061 16.0025 7.9999 16.0025C12.0592 16.0025 15.3499 12.7118 15.3499 8.65249Z" fill="currentColor"/>
+                            <path d="M10.7032 6.8847L7.16767 10.4202L5.3999 8.65247" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <p class="text-base text-neutral-dark-300">{{ criteria.name }}</p>
+                </div>
+            }
+        </div>
+    </form>
+    <div class="w-full flex items-stretch gap-3">
+        <app-button
+            class="flex-1"
+            type="secondary"
+            (click)="goBack()" 
+        >
+            Back
+        </app-button>
+        <app-button
+            class="flex-1"
+            (click)="completeRegistration()"
+            [isLoading]="isLoading()"
+            [disabled]="!passwordForm.valid"
+        >
+            Create my account
+        </app-button>
+    </div>
+    <footer>
+        <p class="text-base font-medium text-neutral-dark-300">New here? <span class="text-primary-500 cursor-pointer" routerLink="/register">Create an account with us</span></p>
+    </footer>
+</div>

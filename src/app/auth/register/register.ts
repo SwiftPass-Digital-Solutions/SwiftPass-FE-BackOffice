@@ -3,7 +3,11 @@ import { LogoComponent } from '@shared/components/logo';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from "@shared/components/input/input";
 import { Button } from "@shared/components/button";
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { finalize } from 'rxjs';
+import { RegisterUser } from '../auth.model';
+import { UserType } from '@shared/enums/app-enums';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +16,9 @@ import { RouterLink } from '@angular/router';
 })
 export class Register {
   private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+
   isLoading = signal(false);
 
   registrationForm: FormGroup = this.fb.group({
@@ -20,5 +27,27 @@ export class Register {
     email: ['', [Validators.required, Validators.email]],
   });
 
-  initRegistration(){}
+  initRegistration(){
+    if(!this.registrationForm.valid){
+      this.registrationForm.markAllAsTouched();
+      return;
+    }
+
+    const payload: RegisterUser = {
+      swiftPassUser: {
+        ...this.registrationForm.value,
+      },
+      userType: UserType.SwiftPassUser
+    };
+
+    this.isLoading.set(true);
+
+    this.authService.registerUser(payload)
+    .pipe(finalize(() => this.isLoading.set(false)))
+    .subscribe({
+      next: (res) => {
+        this.router.navigate(['otp', res.data]);
+      },
+    })
+  }
 }
