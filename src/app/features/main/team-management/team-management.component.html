@@ -1,0 +1,85 @@
+<div class="w-full min-h-screen bg-gray-50 p-4 sm:p-6">
+
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <!-- menu icon (mobile only) -->
+      <button class="sm:hidden p-2 rounded-xl bg-white shadow">
+        <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+      <h1 class="text-2xl font-semibold text-gray-900">Team Management</h1>
+    </div>
+    <button class="p-2 rounded-xl bg-white shadow">
+      <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+        <path d="M15 17h5l-1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+          stroke-linejoin="round" />
+        <path d="M18 8a6 6 0 10-12 0v4l-2 2v1h16v-1l-2-2V8z" stroke="currentColor" stroke-width="1.2"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Header + Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <!-- Left Filters -->
+    <div class="flex flex-col sm:flex-row flex-wrap gap-3 flex-1">
+      <!-- Search -->
+      <div class="flex items-center bg-white ring-1 ring-gray-200 rounded-xl px-3 py-2 flex-1">
+        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <input type="text" placeholder="Search team members"
+          class="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
+      </div>
+
+      <!-- Role Dropdown -->
+      <button
+        class="px-4 py-2 bg-white rounded-xl ring-1 ring-gray-200 shadow-sm text-sm text-gray-700 flex items-center justify-between w-full sm:w-auto">
+        Role
+        <svg class="w-4 h-4 ml-2 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-3">
+      <button
+        class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl shadow-sm hover:bg-blue-700 transition-colors">
+        Invite Member
+      </button>
+      <button
+        class="px-6 py-2.5 bg-white text-gray-700 font-medium rounded-xl ring-1 ring-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+        Role Settings
+      </button>
+    </div>
+  </div>
+
+  <!-- Members List -->
+  <div class="bg-white rounded-2xl ring-1 ring-gray-200 shadow-sm divide-y divide-gray-100">
+    <div *ngFor="let member of teamMembers" class="p-4 flex justify-between items-center">
+      <div>
+        <p class="font-medium text-gray-900">{{ member.name }}</p>
+        <p class="text-sm text-gray-600">{{ member.email }}</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <p class="text-gray-800 text-sm font-medium">{{ member.role }}</p>
+        <button
+          class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium flex items-center gap-1 hover:bg-blue-100 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16.862 4.487a2.1 2.1 0 012.97 2.97L7.425 19.865l-4.2 1.23 1.23-4.2L16.862 4.487z" />
+          </svg>
+          Edit User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-team-setup-modal *ngIf="showModal" [title]="modalTitle" [type]="modalType"
+  (closeModal)="showModal = false"></app-team-setup-modal>

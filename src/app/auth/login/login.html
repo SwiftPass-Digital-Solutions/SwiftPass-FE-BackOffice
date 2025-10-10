@@ -1,33 +1,73 @@
-<div class="max-w-lg mx-auto h-full flex flex-col justify-center gap-8">
-    <div class="w-full flex justify-center">
-        <app-logo />
+<div class="min-h-screen bg-gray-50 flex items-start justify-center py-12 px-4 md:items-center">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="flex justify-center mb-12">
+      <!-- put your logo at src/assets/logo.svg -->
+      <img src="images/Logo.png" alt="Logo" class="h-10 w-10" />
     </div>
-    <div>
-        <h3 class="text-2xl mb-1">Login</h3>
-        <p class="text-neutral-dark-300 text-base">Enter your details below to log in</p>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl p-6 md:p-10 shadow-lg ring-1 ring-gray-100">
+      <h1 class="text-center text-xl md:text-2xl font-semibold">Log in</h1>
+      <p class="text-center text-gray-500 mt-2">Enter your details below to log in</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-4">
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+          <input formControlName="email" type="email" placeholder="name@example.com"
+            class="w-full rounded-xl border border-gray-200 px-4 py-3 placeholder-gray-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+          <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-sm text-red-500 mt-1">
+            <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
+            <div *ngIf="form.get('email')?.errors?.['email']">Enter a valid email</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <div class="relative">
+            <input [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter password"
+              class="w-full rounded-xl border border-gray-200 px-4 py-3 placeholder-gray-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-300 pr-12 transition" />
+            <button type="button" (click)="toggleHide()"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 focus:outline-none"
+              aria-label="Toggle password visibility">
+              <!-- eye / eye-off icons -->
+              <svg *ngIf="hide" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg *ngIf="!hide" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.223-3.675M3 3l18 18" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                  d="M9.88 9.88A3 3 0 0014.12 14.12" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="text-sm text-red-500 mt-1">
+            <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
+            <div *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div>
+
+
+          <button type="submit"
+            class="w-full rounded-lg bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+            Next
+          </button>
+        </div>
+
+        <p class="text-center text-gray-500 mt-4">Forgot password? <a href="#" class="text-blue-600">Contact your
+            admin</a></p>
+      </form>
     </div>
-    <form class="flex flex-col gap-5" [formGroup]="loginForm">
-        <app-input
-            label="Email address"
-            formControlName="email"
-            type="email"
-            placeholder="Enter your email"
-        />
-        <app-input
-            label="Password"
-            formControlName="password"
-            type="password"
-            placeholder="Enter your password"
-        />
-    </form>
-     <app-button
-        (click)="login()"
-        [isLoading]="isLoading()"
-        [disabled]="!loginForm.valid"
-    >
-        Log In
-    </app-button>
-    <footer>
-        <p class="text-base font-medium text-neutral-dark-300">New here? <span class="text-primary-500 cursor-pointer" routerLink="/register">Create an account with us</span></p>
-    </footer>
+  </div>
 </div>

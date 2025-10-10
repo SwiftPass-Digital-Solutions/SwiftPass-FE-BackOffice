@@ -1,0 +1,237 @@
+<main class="flex flex-col h-screen bg-white">
+  <!-- Header -->
+  <header class="px-4 sm:px-6 py-4 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <button (click)="goBack()" class="w-10 h-10 rounded-xl bg-white shadow flex items-center justify-center">
+        <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Document Review</h1>
+        <p class="text-sm text-gray-500">{{ userEmail }}</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scrollable content area -->
+  <div class="flex-1 overflow-y-auto px-4 sm:px-6 pb-36 sm:pb-10">
+    <!-- Desktop grid -->
+    <div class="hidden sm:grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto mt-6">
+      <!-- Left column -->
+      <div class="space-y-6">
+        <!-- Bio Data -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100">
+          <h3 class="text-lg font-medium mb-4">Bio Data</h3>
+          <dl class="space-y-3 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <dt>Name</dt>
+              <dd class="font-semibold text-gray-900">{{ bio.name }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>SPSN</dt>
+              <dd class="font-semibold text-gray-900">{{ bio.spsn }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Onboarded</dt>
+              <dd class="font-semibold text-gray-900">{{ bio.onboarded }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <!-- Other Documents -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100">
+          <h3 class="text-lg font-medium mb-4">Other Submitted Documents</h3>
+          <ul class="space-y-4">
+            <li *ngFor="let d of otherDocs" class="flex items-center justify-between">
+              <span class="font-medium text-sm text-gray-900">{{ d.name }}</span>
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
+                  [ngClass]="badgeClass(d.status)">
+                  <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>
+                  {{ d.status }}
+                </span>
+                <button
+                  class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100 flex items-center justify-center">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" />
+                  </svg>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Right column -->
+      <div>
+        <section class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100 relative">
+          <div class="absolute top-6 right-6">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
+              [ngClass]="badgeClass(nin.status)">
+              {{ nin.status }}
+            </span>
+          </div>
+          <h3 class="text-lg font-medium mb-4">NIN Details</h3>
+          <dl class="space-y-3 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <dt>Name</dt>
+              <dd class="font-semibold text-gray-900">{{ nin.name }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Photo</dt>
+              <dd><a class="text-indigo-600 font-medium cursor-pointer">View</a></dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Phone Number</dt>
+              <dd class="font-semibold text-gray-900">{{ nin.phone }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>ID Number</dt>
+              <dd class="font-semibold text-gray-900">{{ nin.idNumber }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Upload Date</dt>
+              <dd class="font-semibold text-gray-900">{{ nin.uploadDate }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt>Expiry Date</dt>
+              <dd class="font-semibold text-gray-900">{{ nin.expiryDate || 'N/A' }}</dd>
+            </div>
+          </dl>
+
+          <!-- Image -->
+          <div class="mt-5 bg-gray-50 rounded-lg overflow-hidden ring-1 ring-gray-100">
+            <img [src]="nin.imageUrl" alt="NIN Image" class="w-full object-contain" />
+          </div>
+
+          <!-- Download button -->
+          <div class="mt-5">
+            <button class="w-12 h-12 rounded-2xl bg-white shadow flex items-center justify-center ring-1 ring-gray-100">
+              <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3v12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M21 21H3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Mobile stacked cards -->
+    <div class="sm:hidden mt-6 space-y-6">
+      <!-- Bio Data -->
+      <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100">
+        <h3 class="text-base font-medium">Bio Data</h3>
+        <div class="mt-2 border-t border-gray-100 pt-2 text-sm text-gray-600">
+          <div class="flex justify-between py-1"><span>Name</span><span class="font-medium text-gray-900">{{ bio.name
+              }}</span></div>
+          <div class="flex justify-between py-1"><span>SPSN</span><span class="font-medium text-gray-900">{{ bio.spsn
+              }}</span></div>
+          <div class="flex justify-between py-1"><span>Onboarded</span><span class="font-medium text-gray-900">{{
+              bio.onboarded }}</span></div>
+        </div>
+      </section>
+
+      <!-- Other Submitted Documents -->
+      <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100">
+        <h3 class="text-base font-medium">Other Submitted Documents</h3>
+        <ul class="divide-y divide-gray-100 mt-3">
+          <li *ngFor="let d of otherDocs" class="flex items-center justify-between py-3">
+            <span class="font-medium text-sm text-gray-900">{{ d.name }}</span>
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
+                [ngClass]="badgeClass(d.status)">
+                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>
+                {{ d.status }}
+              </span>
+              <button
+                class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" />
+                </svg>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- NIN Details -->
+      <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100 relative">
+        <div class="absolute top-5 right-5">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
+            [ngClass]="badgeClass(nin.status)">
+            {{ nin.status }}
+          </span>
+        </div>
+        <h3 class="text-base font-medium">NIN Details</h3>
+        <dl class="mt-2 text-sm text-gray-600 space-y-2">
+          <div class="flex justify-between">
+            <dt>Name</dt>
+            <dd class="font-medium text-gray-900">{{ nin.name }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Photo</dt>
+            <dd><a class="text-indigo-600 font-medium cursor-pointer">View</a></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Phone</dt>
+            <dd class="font-medium text-gray-900">{{ nin.phone }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>ID Number</dt>
+            <dd class="font-medium text-gray-900">{{ nin.idNumber }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Upload Date</dt>
+            <dd class="font-medium text-gray-900">{{ nin.uploadDate }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt>Expiry Date</dt>
+            <dd class="font-medium text-gray-900">{{ nin.expiryDate || 'N/A' }}</dd>
+          </div>
+        </dl>
+
+        <div class="mt-4 rounded-lg overflow-hidden bg-gray-50 ring-1 ring-gray-100">
+          <img [src]="nin.imageUrl" alt="NIN Image" class="w-full object-contain" />
+        </div>
+        <div class="mt-4">
+          <button class="w-12 h-12 rounded-2xl bg-white shadow ring-1 ring-gray-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M21 21H3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div
+    class="bg-white shadow-lg ring-1 ring-gray-100 px-6 py-4 sm:static sm:shadow-none sm:mt-6 sm:rounded-none fixed bottom-0 inset-x-0 z-10">
+    <div class="max-w-6xl mx-auto flex gap-4">
+      <button (click)="reject()"
+        class="flex-1 rounded-xl border border-gray-200 py-3 font-medium text-gray-700 hover:bg-gray-50">Reject</button>
+      <button (click)="approve()"
+        class="flex-1 rounded-xl bg-blue-600 text-white py-3 font-medium shadow hover:bg-blue-700">Approve</button>
+    </div>
+  </div>
+</main>
+
+<app-approval-modal [isOpen]="showApprovedModal" (confirm)="onGoToDocuments()" (cancel)="showApprovedModal = false">
+</app-approval-modal>
+
+<app-decline-modal [isOpen]="showDeclinedModal" (confirm)="onGoToDocuments()" (cancel)="showDeclinedModal = false">
+</app-decline-modal>

@@ -1,0 +1,53 @@
+<div class="flex flex-col min-h-screen items-center justify-start bg-gray-50">
+  <!-- Logo -->
+  <div class="justify-start mb-16 mt-16">
+    <img src="images/Logo.png" alt="Logo" class="h-10 w-10" />
+  </div>
+
+  <div class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
+
+    <!-- Title -->
+    <h2 class="text-center text-xl font-semibold text-gray-900">Log in</h2>
+    <p class="mt-1 text-center text-sm text-gray-500">
+      Enter your details below to log in
+    </p>
+
+    <!-- Form -->
+    <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+        <input id="email" type="email" [(ngModel)]="loginData.email" name="email" required
+          class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 sm:text-sm"
+          placeholder="Last Name" />
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <div class="relative">
+          <input id="password" type="password" [(ngModel)]="loginData.password" name="password" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 sm:text-sm"
+            placeholder="Enter password" />
+          <button type="button" class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+            (click)="togglePassword()">
+            <span *ngIf="showPassword">🙈</span>
+            <span *ngIf="!showPassword">👁️</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+        class="w-full rounded-lg bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+        Next
+      </button>
+    </form>
+
+    <!-- Forgot Password -->
+    <p class="mt-4 text-center text-sm text-gray-500">
+      Forgot password?
+      <a href="#" class="text-blue-600 hover:underline">Contact your admin</a>
+    </p>
+  </div>
+</div>

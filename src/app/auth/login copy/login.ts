@@ -21,27 +21,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.html',
 })
 export class Login {
-  form: FormGroup;
-  hide = true;
+  loginData = {
+    email: '',
+    password: '',
+  };
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+    const passwordInput = document.getElementById('password') as HTMLInputElement;
+    passwordInput.type = this.showPassword ? 'text' : 'password';
   }
 
-  toggleHide() {
-    this.hide = !this.hide;
-  }
-
-  submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    // Replace with real auth integration
-    console.log('Login payload', this.form.value);
-    alert('Submitted: ' + JSON.stringify(this.form.value));
+  onSubmit() {
+    console.log('Login data:', this.loginData);
   }
 }

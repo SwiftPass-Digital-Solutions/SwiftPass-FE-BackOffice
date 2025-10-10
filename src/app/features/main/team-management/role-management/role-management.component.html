@@ -1,0 +1,40 @@
+<div class="w-full min-h-screen bg-gray-50 p-4 sm:p-6">
+  <!-- Back Button + Header -->
+  <div class="flex items-center justify-between mb-6">
+    <button
+      class="flex items-center gap-2 px-4 py-2 bg-white ring-1 ring-gray-200 rounded-xl shadow-sm hover:bg-gray-50">
+      <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span class="text-sm text-gray-700 font-medium">Back</span>
+    </button>
+    <button
+      class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl shadow-sm hover:bg-blue-700 transition-colors">
+      Add New Role
+    </button>
+  </div>
+
+  <!-- Roles List -->
+  <div class="bg-white rounded-2xl ring-1 ring-gray-200 shadow-sm divide-y divide-gray-100">
+    <div *ngFor="let role of roles" class="p-4 flex justify-between items-start">
+      <div>
+        <p class="font-medium text-gray-900">{{ role.name }}</p>
+        <p class="text-sm text-gray-600 mb-2">{{ role.description }}</p>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <span>Members <span class="text-gray-800 font-medium">{{ role.members }}</span></span>
+          <span>Permissions <span class="text-gray-800 font-medium">{{ role.permissions }}</span></span>
+        </div>
+      </div>
+      <button
+        class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium flex items-center gap-1 hover:bg-blue-100 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M16.862 4.487a2.1 2.1 0 012.97 2.97L7.425 19.865l-4.2 1.23 1.23-4.2L16.862 4.487z" />
+        </svg>
+        Edit Role
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-team-setup-modal *ngIf="showModal" [title]="modalTitle" [type]="modalType" (closeModal)="showModal = false"></app-team-setup-modal>

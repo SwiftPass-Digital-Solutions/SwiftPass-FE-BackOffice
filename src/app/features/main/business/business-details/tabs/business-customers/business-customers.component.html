@@ -1,0 +1,53 @@
+<div class="space-y-4">
+  <!-- Filters -->
+  <div class="flex flex-col sm:flex-row gap-3">
+    <div class="flex items-center bg-white ring-1 ring-gray-200 rounded-xl px-3 py-2 flex-1">
+      <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <input type="text" placeholder="Search customer's name or email"
+        class="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400">
+    </div>
+    <div class="flex gap-2">
+      <button class="px-4 py-2 bg-white ring-1 ring-gray-200 rounded-xl text-sm text-gray-700">Document Type</button>
+      <button class="px-4 py-2 bg-white ring-1 ring-gray-200 rounded-xl text-sm text-gray-700">Status</button>
+    </div>
+  </div>
+
+  <!-- Table (Desktop) -->
+  <div class="hidden md:block bg-white ring-1 ring-gray-200 rounded-2xl overflow-hidden shadow-sm">
+    <table class="min-w-full text-sm text-gray-800">
+      <thead>
+        <tr class="bg-gray-50 text-gray-600">
+          <th class="px-6 py-3 text-left">Client</th>
+          <th class="px-6 py-3 text-left">SPSN</th>
+          <th class="px-6 py-3 text-left">Onboarded On</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of customers" class="border-t border-gray-100 hover:bg-gray-50">
+          <td class="px-6 py-3">
+            <p class="font-medium">{{ c.name }}</p>
+            <p class="text-xs text-gray-500">{{ c.email }}</p>
+          </td>
+          <td class="px-6 py-3">{{ c.spsn }}</td>
+          <td class="px-6 py-3">{{ c.onboardedOn }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="block md:hidden space-y-3">
+    <div *ngFor="let c of customers" class="bg-white p-4 rounded-2xl ring-1 ring-gray-200 shadow-sm">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="font-semibold text-gray-900">{{ c.name }}</h3>
+          <p class="text-sm text-gray-500">{{ c.email }}</p>
+        </div>
+        <p class="text-sm font-medium text-gray-700">{{ c.spsn }}</p>
+      </div>
+      <p class="text-xs text-gray-400 mt-1">Onboarded on {{ c.onboardedOn }}</p>
+    </div>
+  </div>
+</div>

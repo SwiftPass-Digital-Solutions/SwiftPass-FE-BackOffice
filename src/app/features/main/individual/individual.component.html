@@ -1,0 +1,137 @@
+<main class="min-h-screen bg-gray-50 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <!-- menu icon (mobile only) -->
+      <button class="sm:hidden p-2 rounded-xl bg-white shadow">
+        <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+      <h1 class="text-2xl font-semibold text-gray-900">Individuals</h1>
+    </div>
+    <button class="p-2 rounded-xl bg-white shadow">
+      <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
+        <path d="M15 17h5l-1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+          stroke-linejoin="round" />
+        <path d="M18 8a6 6 0 10-12 0v4l-2 2v1h16v-1l-2-2V8z" stroke="currentColor" stroke-width="1.2"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap gap-3 mb-6 overflow-x-auto pb-2">
+    <div
+      class="flex-1 sm:flex-none min-w-[250px] bg-white rounded-full shadow ring-1 ring-gray-100 flex items-center px-4 py-2">
+      <svg class="w-5 h-5 text-gray-400 mr-2" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.4" />
+        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+      </svg>
+      <input type="text" placeholder="Search customer’s name or email"
+        class="flex-1 bg-transparent text-gray-900 text-sm focus:outline-none placeholder-gray-400" />
+    </div>
+
+    <select
+      class="min-w-[180px] bg-white text-sm text-gray-700 rounded-full shadow ring-1 ring-gray-100 px-4 py-2 focus:outline-none">
+      <option>Verified Document</option>
+      <option>NIN</option>
+      <option>CAC</option>
+    </select>
+
+    <select
+      class="min-w-[150px] bg-white text-sm text-gray-700 rounded-full shadow ring-1 ring-gray-100 px-4 py-2 focus:outline-none">
+      <option>Status</option>
+      <option>Approved</option>
+      <option>Pending</option>
+      <option>Rejected</option>
+    </select>
+  </div>
+
+  <!-- Desktop Table -->
+  <div class="hidden sm:block bg-white rounded-2xl shadow ring-1 ring-gray-100 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-100 text-sm text-gray-700">
+      <thead class="bg-gray-50 text-gray-600 text-xs font-semibold">
+        <tr>
+          <th class="text-left px-6 py-3">Client</th>
+          <th class="text-left px-6 py-3">Status</th>
+          <th class="text-left px-6 py-3">SPSN</th>
+          <th class="text-left px-6 py-3">Verified document</th>
+          <th class="text-left px-6 py-3">Onboarded On</th>
+          <th class="text-right px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr *ngFor="let user of users" class="hover:bg-gray-50">
+          <td class="px-6 py-4">
+            <div class="font-medium text-gray-900">{{ user.name }}</div>
+            <div class="text-gray-500 text-sm">{{ user.email }}</div>
+          </td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+              [ngClass]="badgeClass(user.status)">
+              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.status)"></span>
+              {{ user.status }}
+            </span>
+          </td>
+          <td class="px-6 py-4 font-medium text-gray-900">{{ user.spsn }}</td>
+          <td class="px-6 py-4 text-gray-900">{{ user.docs }}</td>
+          <td class="px-6 py-4 text-gray-900">{{ user.date }}</td>
+          <td class="px-6 py-4 text-right">
+            <button (click)="goToDetails(1)"
+              class="inline-flex items-center gap-1 px-4 py-2 text-indigo-600 bg-indigo-50 rounded-xl text-sm font-medium ring-1 ring-indigo-100">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" />
+              </svg>
+              View
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Cards -->
+  <div class="sm:hidden space-y-4">
+    <div *ngFor="let user of users" class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="font-medium text-gray-900">{{ user.name }}</div>
+          <div class="text-sm text-gray-500">{{ user.email }}</div>
+        </div>
+        <div class="text-sm font-medium text-gray-900">{{ user.spsn }}</div>
+      </div>
+
+      <div class="mt-2 flex items-center justify-between">
+        <div class="text-sm text-gray-700">{{ user.docType }}</div>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+          [ngClass]="badgeClass(user.status)">
+          <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.status)"></span>
+          {{ user.status }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex items-center justify-center mt-8 space-x-2">
+    <button class="w-10 h-10 rounded-xl bg-white ring-1 ring-gray-200 flex items-center justify-center">
+      <svg class="w-4 h-4 text-gray-700" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <button class="w-10 h-10 rounded-xl bg-blue-600 text-white font-medium">1</button>
+    <button class="w-10 h-10 rounded-xl bg-white ring-1 ring-gray-200 text-gray-700 font-medium">2</button>
+    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-400">...</div>
+    <button class="w-10 h-10 rounded-xl bg-white ring-1 ring-gray-200 text-gray-700 font-medium">9</button>
+
+    <button class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</main>

@@ -1,0 +1,209 @@
+<main class="min-h-screen bg-gray-50 p-4 sm:p-8">
+  <!-- Back button -->
+  <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white shadow ring-1 ring-gray-100">
+    <svg class="w-4 h-4 text-gray-700" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+    <span class="text-sm font-medium text-gray-700">Back</span>
+  </button>
+
+  <!-- Header -->
+  <div class="mt-4">
+    <h1 class="text-2xl font-semibold text-gray-900">Chinonso Eze</h1>
+    <p class="text-gray-500 text-sm">chinonso.eze@domain.com</p>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="mt-6 border-b border-gray-200 overflow-x-auto">
+    <ul class="flex space-x-6 text-sm font-medium min-w-max">
+      <li><button (click)="activeTab='profile'"
+          [ngClass]="activeTab==='profile' ? 'text-blue-600 border-b-2 border-blue-600 pb-2' : 'text-gray-500 pb-2'">Profile
+          Details</button></li>
+      <li><button (click)="activeTab='documents'"
+          [ngClass]="activeTab==='documents' ? 'text-blue-600 border-b-2 border-blue-600 pb-2' : 'text-gray-500 pb-2'">Documents</button>
+      </li>
+      <li><button (click)="activeTab='spsn'"
+          [ngClass]="activeTab==='spsn' ? 'text-blue-600 border-b-2 border-blue-600 pb-2' : 'text-gray-500 pb-2'">SPSN
+          Usage</button></li>
+      <li><button (click)="activeTab='vault'"
+          [ngClass]="activeTab==='vault' ? 'text-blue-600 border-b-2 border-blue-600 pb-2' : 'text-gray-500 pb-2'">Vault</button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- === Profile Details === -->
+  <section *ngIf="activeTab==='profile'" class="mt-6">
+    <div class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-5">
+      <h2 class="font-semibold text-gray-900 mb-3">Bio Data</h2>
+      <div class="divide-y divide-gray-100">
+        <div class="flex justify-between py-3 text-sm">
+          <span class="text-gray-500">Name</span><span class="font-medium text-gray-900">Adaobi Okafor</span>
+        </div>
+        <div class="flex justify-between py-3 text-sm">
+          <span class="text-gray-500">SPSN</span><span class="font-medium text-gray-900">SWP-2931</span>
+        </div>
+        <div class="flex justify-between py-3 text-sm">
+          <span class="text-gray-500">Onboarded</span><span class="font-medium text-gray-900">Aug 5, 2025</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Documents Tab === -->
+  <section *ngIf="activeTab==='documents'" class="mt-6">
+    <!-- Desktop -->
+    <div class="hidden sm:block bg-white rounded-2xl shadow ring-1 ring-gray-100 overflow-hidden">
+      <table class="min-w-full text-sm text-gray-700">
+        <thead class="bg-gray-50 text-gray-600 font-semibold text-xs">
+          <tr>
+            <th class="text-left px-6 py-3">Document Type</th>
+            <th class="text-left px-6 py-3">Status</th>
+            <th class="text-left px-6 py-3">Last Updated</th>
+            <th class="text-left px-6 py-3">Expiry Date</th>
+            <th class="text-right px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr *ngFor="let d of documents">
+            <td class="px-6 py-3">{{ d.type }}</td>
+            <td class="px-6 py-3">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                [ngClass]="badgeClass(d.status)">
+                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>{{ d.status }}
+              </span>
+            </td>
+            <td class="px-6 py-3">{{ d.updated }}</td>
+            <td class="px-6 py-3">{{ d.expiry }}</td>
+            <td class="px-6 py-3 text-right">
+              <button (click)="openModal()" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-medium">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile -->
+    <div class="sm:hidden space-y-3">
+      <div *ngFor="let d of documents" class="bg-white rounded-2xl p-4 shadow ring-1 ring-gray-100">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-900 font-medium">{{ d.type }}</span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+            [ngClass]="badgeClass(d.status)">
+            <span class="w-2 h-2 rounded-full mr-1" [ngClass]="dotClass(d.status)"></span>{{ d.status }}
+          </span>
+        </div>
+        <div class="mt-2 text-sm text-gray-500">{{ d.updated }} • Expiry: {{ d.expiry }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SPSN Usage Tab === -->
+  <section *ngIf="activeTab==='spsn'" class="mt-6">
+
+    <!-- Desktop Layout -->
+    <div class="hidden sm:block bg-white rounded-2xl shadow ring-1 ring-gray-100 overflow-hidden">
+      <table class="min-w-full text-sm text-gray-700">
+        <thead class="bg-gray-50 text-gray-600 font-semibold text-xs">
+          <tr>
+            <th class="text-left px-6 py-3">Partner</th>
+            <th class="text-left px-6 py-3">Link</th>
+            <th class="text-left px-6 py-3">Connected On</th>
+            <th class="text-left px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr *ngFor="let s of spsnUsage" class="hover:bg-gray-50">
+            <!-- Partner -->
+            <td class="px-6 py-4 font-medium text-gray-900">
+              <div class="flex items-center gap-2">
+                <!-- icon -->
+                <div class="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center">
+                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                </div>
+                {{ s.partner }}
+              </div>
+            </td>
+
+            <!-- Link -->
+            <td class="px-6 py-4">
+              <a href="{{ s.link }}" target="_blank" class="text-gray-500 hover:text-gray-800">
+                {{ s.link }}
+              </a>
+            </td>
+
+            <!-- Connected On -->
+            <td class="px-6 py-4">
+              <div class="text-gray-700">Connected on {{ s.connected }}</div>
+              <a href="#" class="text-xs text-blue-600 hover:underline mt-1 inline-block">View documents accessed</a>
+            </td>
+
+            <!-- Action -->
+            <td class="px-6 py-4 text-right">
+              <button class="px-4 py-2 bg-indigo-50 text-indigo-600 text-sm font-medium rounded-xl hover:bg-indigo-100">
+                Message Partner
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="sm:hidden space-y-4">
+      <div *ngFor="let s of spsnUsage" class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-4">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+              </div>
+              <span class="font-medium text-gray-900">{{ s.partner }}</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">{{ s.link }}</div>
+            <div class="text-sm text-gray-700 mt-1">Connected on {{ s.connected }}</div>
+            <a href="#" class="text-xs text-blue-600 hover:underline mt-1 block">View documents accessed</a>
+          </div>
+
+          <button class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-medium">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.4" />
+              <path d="M8 8h8v8H8z" stroke="currentColor" stroke-width="1.4" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- === Vault Tab === -->
+  <section *ngIf="activeTab==='vault'" class="mt-6">
+    <div class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-5">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24">
+            <path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 8h8v8H8z" stroke="currentColor" stroke-width="1.4" />
+          </svg>
+          <span class="font-semibold text-gray-900">Education</span>
+        </div>
+        <span class="text-sm text-gray-400">2 documents</span>
+      </div>
+      <div class="space-y-2">
+        <div *ngFor="let doc of vaultDocs" class="flex justify-between items-center bg-gray-50 rounded-xl px-4 py-2">
+          <span class="text-gray-800 text-sm">{{ doc }}</span>
+          <button class="flex items-center gap-1 text-indigo-600 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" />
+            </svg>
+            View
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-view-document-modal [isOpen]="isModalOpen" [documentImage]="'/assets/nin-sample.png'" (close)="closeModal()"
+  (reject)="onReject()"></app-view-document-modal>

@@ -1,0 +1,53 @@
+<!-- visible only when isOpen -->
+<div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center px-4">
+  <!-- overlay -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" (click)="onCancel()" aria-hidden="true">
+  </div>
+
+  <!-- dialog -->
+  <div role="dialog" aria-modal="true" aria-labelledby="approval-modal-title" aria-describedby="approval-modal-desc"
+    class="relative w-full max-w-lg transform transition-all duration-200">
+    <div class="bg-white rounded-2xl p-5 shadow-2xl ring-1 ring-gray-100 text-center">
+      <!-- green check circle -->
+      <div class="flex justify-center mb-6">
+        <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
+          <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center border border-green-100">
+            <!-- check icon -->
+            <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h2 id="approval-modal-title" class="text-xl font-semibold text-gray-900 mb-2">
+        {{ title }}
+      </h2>
+
+      <!-- Description -->
+      <p id="approval-modal-desc" class="text-sm text-gray-500 mb-8">
+        {{ message }}
+      </p>
+
+      <!-- actions -->
+      <div class="flex gap-6 justify-center items-center">
+        <!-- Cancel -->
+        <button (click)="onCancel()"
+          class="flex-1 max-w-xs rounded-2xl px-4 py-2 bg-white text-gray-800 text-base font-medium shadow-sm border border-gray-100 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          type="button">
+          {{ cancelLabel }}
+        </button>
+
+        <!-- Confirm -->
+        <button #confirmButton (click)="onConfirm()"
+          class="flex-1 max-w-xs rounded-xl px-4 py-2 bg-blue-600 text-white text-base font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-300"
+          type="button">
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<!-- <div class="min-h-screen bg-gray-800 p-6 flex items-center justify-center">
+
+</div> -->
+
+<div class="w-full bg-white p-2">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <app-side-bar
+      class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-md transform transition-transform duration-300 ease-in-out"
+      [class.translate-x-0]="isSidebarOpen" [class.-translate-x-full]="!isSidebarOpen && !isDesktop"
+      [class.md:translate-x-0]="isDesktop" [class.w-64]="true" [class.transition-transform]="true"
+      [class.duration-300]="true" (closeSidebar)="closeSidebar()">
+    </app-side-bar>
+
+    <div *ngIf="isSidebarOpen && !isDesktop" class="fixed inset-0 bg-grey bg-opacity-90 z-30" (click)="closeSidebar()">
+    </div>
+
+
+    <!-- Main content area (router-outlet for pages) -->
+    <div class="flex flex-col h-full w-full transition-all duration-300 ease-in-out" [class.md:ml-64]="isDesktop">
+
+      <!-- Mobile Top Bar -->
+      <header class="flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm md:hidden">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 flex items-center justify-center rounded-lg bg-white shadow-sm">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9h6v6H3zM9 3h6v6H9zM15 15h6v6h-6z" stroke="#1E40AF" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <span class="font-semibold text-sm">YourApp</span>
+        </div>
+
+        <button (click)="toggleSidebar()" class="p-2 rounded-md text-gray-700 hover:bg-gray-100">
+          <svg *ngIf="!isSidebarOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5M3.75 12h16.5M3.75 18.75h16.5" />
+          </svg>
+          <svg *ngIf="isSidebarOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </header>
+
+      <main class="w-full verflow-y-auto p-4 md:p-6">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+</div>

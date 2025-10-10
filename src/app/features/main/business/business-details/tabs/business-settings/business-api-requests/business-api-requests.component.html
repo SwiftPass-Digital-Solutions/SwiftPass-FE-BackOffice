@@ -1,0 +1,120 @@
+<div class="w-full min-h-screen bg-gray-50 p-4 sm:p-6">
+  <!-- Header + Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div class="flex flex-wrap gap-3">
+      <button
+        class="px-4 py-2 bg-white rounded-xl ring-1 ring-gray-200 shadow-sm text-sm text-gray-700 flex items-center justify-between w-full sm:w-auto">
+        Status
+        <svg class="w-4 h-4 ml-2 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button
+        class="px-4 py-2 bg-white rounded-xl ring-1 ring-gray-200 shadow-sm text-sm text-gray-700 flex items-center justify-between w-full sm:w-auto">
+        Endpoint
+        <svg class="w-4 h-4 ml-2 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+
+    <button
+      class="px-6 py-2.5 bg-red-600 text-white font-medium rounded-xl shadow-sm hover:bg-red-700 transition-colors">
+      Revoke API Access
+    </button>
+  </div>
+
+  <!-- 💻 Desktop Table View -->
+  <div class="hidden md:block bg-white rounded-2xl shadow-sm ring-1 ring-gray-200 overflow-hidden">
+    <table class="min-w-full text-sm text-gray-800 border-separate border-spacing-0">
+      <thead>
+        <tr class="bg-gray-50 text-gray-600">
+          <th class="text-left px-6 py-3">Endpoint</th>
+          <th class="text-left px-6 py-3">SPSN</th>
+          <th class="text-left px-6 py-3">Status</th>
+          <th class="text-left px-6 py-3">Message</th>
+          <th class="text-left px-6 py-3">Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of apiRequests" class="border-t border-gray-100 hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-3">{{ req.endpoint }}</td>
+          <td class="px-6 py-3">{{ req.spsn }}</td>
+          <td class="px-6 py-3">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+                'bg-green-50 text-green-700 ring-1 ring-green-100': req.status === 'Approved' || req.status === 'Success',
+                'bg-red-50 text-red-700 ring-1 ring-red-100': req.status === 'Failed',
+                'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-100': req.status === 'Pending'
+              }">
+              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="{
+                  'bg-green-500': req.status === 'Approved' || req.status === 'Success',
+                  'bg-red-500': req.status === 'Failed',
+                  'bg-yellow-400': req.status === 'Pending'
+                }"></span>
+              {{ req.status }}
+            </span>
+          </td>
+          <td class="px-6 py-3 text-gray-700">{{ req.message }}</td>
+          <td class="px-6 py-3 text-gray-600">
+            <div>{{ req.date }}</div>
+            <div class="text-xs text-gray-400">{{ req.time }}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 📱 Mobile Card View -->
+  <div class="block md:hidden space-y-3">
+    <div *ngFor="let req of apiRequests" class="bg-white p-4 rounded-2xl ring-1 ring-gray-200 shadow-sm">
+      <div class="flex justify-between items-center mb-1">
+        <p class="font-medium text-gray-900">{{ req.endpoint }}</p>
+        <p class="text-sm text-gray-700">{{ req.spsn }}</p>
+      </div>
+      <p class="text-sm text-gray-500 mb-2">{{ req.date }} {{ req.time }}</p>
+
+      <div class="flex items-center justify-between">
+        <p class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+            'bg-green-50 text-green-700 ring-1 ring-green-100': req.status === 'Approved' || req.status === 'Success',
+            'bg-red-50 text-red-700 ring-1 ring-red-100': req.status === 'Failed',
+            'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-100': req.status === 'Pending'
+          }">
+          <span class="w-2 h-2 rounded-full mr-2" [ngClass]="{
+              'bg-green-500': req.status === 'Approved' || req.status === 'Success',
+              'bg-red-500': req.status === 'Failed',
+              'bg-yellow-400': req.status === 'Pending'
+            }"></span>
+          {{ req.status }}
+        </p>
+        <p class="text-sm text-gray-500">{{ req.message }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧭 Pagination -->
+  <div class="flex items-center justify-center mt-6 gap-2">
+    <button
+      class="w-10 h-10 flex items-center justify-center bg-white ring-1 ring-gray-200 rounded-xl shadow-sm hover:bg-gray-50">
+      <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+        <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <ng-container *ngFor="let p of pages">
+      <button class="w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium"
+        [ngClass]="p === currentPage ? 'bg-blue-600 text-white shadow' : 'bg-white ring-1 ring-gray-200 text-gray-700 hover:bg-gray-50'"
+        (click)="currentPage = p">
+        {{ p }}
+      </button>
+    </ng-container>
+
+    <button
+      class="w-10 h-10 flex items-center justify-center bg-white ring-1 ring-gray-200 rounded-xl shadow-sm hover:bg-gray-50">
+      <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+        <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+</div>
