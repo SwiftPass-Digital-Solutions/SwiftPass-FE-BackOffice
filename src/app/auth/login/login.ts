@@ -24,7 +24,10 @@ export class Login {
   form: FormGroup;
   hide = true;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -40,8 +43,10 @@ export class Login {
       this.form.markAllAsTouched();
       return;
     }
+
+    this.router.navigateByUrl('/main/dashboard');
     // Replace with real auth integration
-    console.log('Login payload', this.form.value);
-    alert('Submitted: ' + JSON.stringify(this.form.value));
+    // console.log('Login payload', this.form.value);
+    // alert('Submitted: ' + JSON.stringify(this.form.value));
   }
 }
