@@ -1,6 +1,6 @@
 <main class="flex flex-col h-screen bg-white">
   <!-- Header -->
-  <header class="px-4 sm:px-6 py-4 border-b border-gray-100">
+  <header class="px-2 sm:px-3 py-4 border-b border-gray-100">
     <div class="flex items-center gap-3">
       <button (click)="goBack()" class="w-10 h-10 rounded-xl bg-white shadow flex items-center justify-center">
         <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none">
@@ -10,13 +10,13 @@
       </button>
       <div>
         <h1 class="text-2xl font-semibold text-gray-900">Document Review</h1>
-        <p class="text-sm text-gray-500">{{ userEmail }}</p>
+        <p class="text-sm text-gray-500">{{ documentOwnerInfo.email }}</p>
       </div>
     </div>
   </header>
 
   <!-- Scrollable content area -->
-  <div class="flex-1 overflow-y-auto px-4 sm:px-6 pb-36 sm:pb-10">
+  <div class="flex-1 overflow-y-auto px-2 sm:px-3 pb-36 sm:pb-10">
     <!-- Desktop grid -->
     <div class="hidden sm:grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto mt-6">
       <!-- Left column -->
@@ -27,15 +27,15 @@
           <dl class="space-y-3 text-sm text-gray-600">
             <div class="flex justify-between">
               <dt>Name</dt>
-              <dd class="font-semibold text-gray-900">{{ bio.name }}</dd>
+              <dd class="font-semibold text-gray-900">{{ documentInfo.fullName }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>SPSN</dt>
-              <dd class="font-semibold text-gray-900">{{ bio.spsn }}</dd>
+              <dd class="font-semibold text-gray-900">{{ documentInfo.spsn }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>Onboarded</dt>
-              <dd class="font-semibold text-gray-900">{{ bio.onboarded }}</dd>
+              <dd class="font-semibold text-gray-900">{{ documentInfo.onboardedDate | date: 'MMM dd, yyyy' }}</dd>
             </div>
           </dl>
         </section>
@@ -44,15 +44,16 @@
         <section class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100">
           <h3 class="text-lg font-medium mb-4">Other Submitted Documents</h3>
           <ul class="space-y-4">
-            <li *ngFor="let d of otherDocs" class="flex items-center justify-between">
-              <span class="font-medium text-sm text-gray-900">{{ d.name }}</span>
+            <li (click)="selectDocumentType(d)" *ngFor="let d of documentInfo.otherDocuments"
+              class="flex items-center justify-between">
+              <span class="font-medium text-sm text-gray-900">{{ d.documentType }}</span>
               <div class="flex items-center gap-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
-                  [ngClass]="badgeClass(d.status)">
-                  <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>
-                  {{ d.status }}
+                  [ngClass]="badgeClass(d.verificationStatus)">
+                  <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.verificationStatus)"></span>
+                  {{ d.verificationStatus }}
                 </span>
-                <button
+                <button (click)="selectDocumentType(d)"
                   class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100 flex items-center justify-center">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
                     <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
@@ -67,18 +68,18 @@
 
       <!-- Right column -->
       <div>
-        <section class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100 relative">
+        <section *ngIf="selectedDocumentType" class="bg-white rounded-2xl shadow-sm p-6 ring-1 ring-gray-100 relative">
           <div class="absolute top-6 right-6">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
-              [ngClass]="badgeClass(nin.status)">
-              {{ nin.status }}
+              [ngClass]="badgeClass(selectedDocumentType.verificationStatus)">
+              {{ selectedDocumentType.verificationStatus }}
             </span>
           </div>
-          <h3 class="text-lg font-medium mb-4">NIN Details</h3>
+          <h3 class="text-lg font-medium mb-4">{{ selectedDocumentType.documentType }} Details</h3>
           <dl class="space-y-3 text-sm text-gray-600">
             <div class="flex justify-between">
               <dt>Name</dt>
-              <dd class="font-semibold text-gray-900">{{ nin.name }}</dd>
+              <dd class="font-semibold text-gray-900">{{ selectedDocumentType.userFullName }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>Photo</dt>
@@ -86,25 +87,26 @@
             </div>
             <div class="flex justify-between">
               <dt>Phone Number</dt>
-              <dd class="font-semibold text-gray-900">{{ nin.phone }}</dd>
+              <dd class="font-semibold text-gray-900">{{ '' }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>ID Number</dt>
-              <dd class="font-semibold text-gray-900">{{ nin.idNumber }}</dd>
+              <dd class="font-semibold text-gray-900">{{ selectedDocumentType.documentId }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>Upload Date</dt>
-              <dd class="font-semibold text-gray-900">{{ nin.uploadDate }}</dd>
+              <dd class="font-semibold text-gray-900">{{ '' }}</dd>
             </div>
             <div class="flex justify-between">
               <dt>Expiry Date</dt>
-              <dd class="font-semibold text-gray-900">{{ nin.expiryDate || 'N/A' }}</dd>
+              <dd class="font-semibold text-gray-900">{{ selectedDocumentType.expiryDate || 'N/A' }}</dd>
             </div>
           </dl>
 
           <!-- Image -->
           <div class="mt-5 bg-gray-50 rounded-lg overflow-hidden ring-1 ring-gray-100">
-            <img [src]="nin.imageUrl" alt="NIN Image" class="w-full object-contain" />
+            <img [src]="selectedDocumentType.documentImageFileUrl" [alt]="selectedDocumentType.documentType"
+              class="w-full object-contain" />
           </div>
 
           <!-- Download button -->
@@ -130,12 +132,14 @@
       <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100">
         <h3 class="text-base font-medium">Bio Data</h3>
         <div class="mt-2 border-t border-gray-100 pt-2 text-sm text-gray-600">
-          <div class="flex justify-between py-1"><span>Name</span><span class="font-medium text-gray-900">{{ bio.name
+          <div class="flex justify-between py-1"><span>Name</span><span class="font-medium text-gray-900">{{
+              documentInfo.fullName
               }}</span></div>
-          <div class="flex justify-between py-1"><span>SPSN</span><span class="font-medium text-gray-900">{{ bio.spsn
+          <div class="flex justify-between py-1"><span>SPSN</span><span class="font-medium text-gray-900">{{
+              documentInfo.spsn
               }}</span></div>
           <div class="flex justify-between py-1"><span>Onboarded</span><span class="font-medium text-gray-900">{{
-              bio.onboarded }}</span></div>
+              documentInfo.onboardedDate | date: 'MMM dd, yyyy' }}</span></div>
         </div>
       </section>
 
@@ -143,13 +147,14 @@
       <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100">
         <h3 class="text-base font-medium">Other Submitted Documents</h3>
         <ul class="divide-y divide-gray-100 mt-3">
-          <li *ngFor="let d of otherDocs" class="flex items-center justify-between py-3">
-            <span class="font-medium text-sm text-gray-900">{{ d.name }}</span>
+          <li (click)="selectDocumentType(d)" *ngFor="let d of documentInfo.otherDocuments"
+            class="flex items-center justify-between py-3">
+            <span class="font-medium text-sm text-gray-900">{{ d.documentType }}</span>
             <div class="flex items-center gap-3">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
-                [ngClass]="badgeClass(d.status)">
-                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>
-                {{ d.status }}
+                [ngClass]="badgeClass(d.verificationStatus)">
+                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.verificationStatus)"></span>
+                {{ d.verificationStatus }}
               </span>
               <button
                 class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100 flex items-center justify-center">
@@ -164,18 +169,18 @@
       </section>
 
       <!-- NIN Details -->
-      <section class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100 relative">
+      <section *ngIf="selectedDocumentType" class="bg-white rounded-2xl shadow-sm p-5 ring-1 ring-gray-100 relative">
         <div class="absolute top-5 right-5">
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1"
             [ngClass]="badgeClass(nin.status)">
-            {{ nin.status }}
+            {{ selectedDocumentType.verificationStatus }}
           </span>
         </div>
-        <h3 class="text-base font-medium">NIN Details</h3>
+        <h3 class="text-base font-medium">{{ selectedDocumentType.documentType }} Details</h3>
         <dl class="mt-2 text-sm text-gray-600 space-y-2">
           <div class="flex justify-between">
             <dt>Name</dt>
-            <dd class="font-medium text-gray-900">{{ nin.name }}</dd>
+            <dd class="font-medium text-gray-900">{{ selectedDocumentType.userFullName }}</dd>
           </div>
           <div class="flex justify-between">
             <dt>Photo</dt>
@@ -183,24 +188,26 @@
           </div>
           <div class="flex justify-between">
             <dt>Phone</dt>
-            <dd class="font-medium text-gray-900">{{ nin.phone }}</dd>
+            <dd class="font-medium text-gray-900">{{ '' }}</dd>
           </div>
           <div class="flex justify-between">
             <dt>ID Number</dt>
-            <dd class="font-medium text-gray-900">{{ nin.idNumber }}</dd>
+            <dd class="font-medium text-gray-900">{{ selectedDocumentType.documentId }}</dd>
           </div>
           <div class="flex justify-between">
             <dt>Upload Date</dt>
-            <dd class="font-medium text-gray-900">{{ nin.uploadDate }}</dd>
+            <dd class="font-medium text-gray-900">{{ '' }}</dd>
           </div>
           <div class="flex justify-between">
             <dt>Expiry Date</dt>
-            <dd class="font-medium text-gray-900">{{ nin.expiryDate || 'N/A' }}</dd>
+            <dd class="font-medium text-gray-900">{{ selectedDocumentType.expiryDate | date: 'MMM dd, yyyy' }}
+            </dd>
           </div>
         </dl>
 
         <div class="mt-4 rounded-lg overflow-hidden bg-gray-50 ring-1 ring-gray-100">
-          <img [src]="nin.imageUrl" alt="NIN Image" class="w-full object-contain" />
+          <img [src]="selectedDocumentType.documentImageFileUrl" [alt]="selectedDocumentType.documentType"
+            class="w-full object-contain" />
         </div>
         <div class="mt-4">
           <button class="w-12 h-12 rounded-2xl bg-white shadow ring-1 ring-gray-100 flex items-center justify-center">
@@ -220,7 +227,7 @@
 
   <!-- Action Bar -->
   <div
-    class="bg-white shadow-lg ring-1 ring-gray-100 px-6 py-4 sm:static sm:shadow-none sm:mt-6 sm:rounded-none fixed bottom-0 inset-x-0 z-10">
+    class="bg-white shadow-lg ring-1 ring-gray-100 px-3 py-4 sm:static sm:shadow-none sm:rounded-none fixed bottom-0 inset-x-0 z-10">
     <div class="max-w-6xl mx-auto flex gap-4">
       <button (click)="reject()"
         class="flex-1 rounded-xl border border-gray-200 py-3 font-medium text-gray-700 hover:bg-gray-50">Reject</button>

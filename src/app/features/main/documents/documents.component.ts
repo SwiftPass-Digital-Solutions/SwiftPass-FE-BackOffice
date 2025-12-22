@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { SharedStateService } from './../../../shared/services/shared-state.service';
+import { DocumentService } from './../../../core/services/api/documents/document.service';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Document } from '@core/interfaces/documents/documents.interface';
 type DocStatus = 'Approved' | 'Pending' | 'Rejected';
 
 interface DocRow {
@@ -19,7 +22,7 @@ interface DocRow {
   imports: [CommonModule, FormsModule],
   templateUrl: './documents.component.html',
 })
-export class DocumentsComponent {
+export class DocumentsComponent implements OnInit {
   // filters
   search = '';
   selectedType = 'All';
@@ -33,91 +36,109 @@ export class DocumentsComponent {
   statuses = ['All', 'Approved', 'Pending', 'Rejected'];
 
   // sample data (add/replace with real data)
-  documents: DocRow[] = [
-    {
-      customerName: 'Adaobi Okafor',
-      email: 'adaobi.okafor@gmail.com',
-      docType: 'CAC Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'Aug 1, 2025',
-    },
-    {
-      customerName: 'John Mensah',
-      email: 'john.mensahr@gmail.com',
-      docType: 'VAT Registration',
-      status: 'Pending',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'In Review',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'SCUML Certificate',
-      status: 'Rejected',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    // duplicates to show long list
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-    {
-      customerName: 'Sarah Bello',
-      email: 'sarah.bello@gmail.com',
-      docType: 'TIN Certificate',
-      status: 'Approved',
-      lastUpdated: 'Aug 1, 2025',
-      expiry: 'N/A',
-    },
-  ];
+  // documents: DocRow[] = [
+  //   {
+  //     customerName: 'Adaobi Okafor',
+  //     email: 'adaobi.okafor@gmail.com',
+  //     docType: 'CAC Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'Aug 1, 2025',
+  //   },
+  //   {
+  //     customerName: 'John Mensah',
+  //     email: 'john.mensahr@gmail.com',
+  //     docType: 'VAT Registration',
+  //     status: 'Pending',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'In Review',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'SCUML Certificate',
+  //     status: 'Rejected',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   // duplicates to show long list
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  //   {
+  //     customerName: 'Sarah Bello',
+  //     email: 'sarah.bello@gmail.com',
+  //     docType: 'TIN Certificate',
+  //     status: 'Approved',
+  //     lastUpdated: 'Aug 1, 2025',
+  //     expiry: 'N/A',
+  //   },
+  // ];
 
-  constructor(private router: Router) {}
+  documents: Document[] = [];
+
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+    private sharedStateService: SharedStateService,
+  ) {}
+
+  ngOnInit(): void {
+    this.documentService.getDocuments(this.currentPage, this.pageSize).subscribe(
+      (res) => {
+        this.documents = res.data.data;
+        console.log('Fetched documents:', res.data.data);
+      },
+      (err) => {
+        console.error('Error fetching documents:', err);
+      },
+    );
+  }
 
   // filter logic
   get filteredDocs() {
@@ -125,12 +146,14 @@ export class DocumentsComponent {
     return this.documents.filter((d) => {
       const matchesTerm =
         !term ||
-        d.customerName.toLowerCase().includes(term) ||
+        d.userFullName.toLowerCase().includes(term) ||
         d.email.toLowerCase().includes(term);
-      const matchesType = this.selectedType === 'All' || d.docType === this.selectedType;
-      const matchesStatus = this.selectedStatus === 'All' || d.status === this.selectedStatus;
+      const matchesType = this.selectedType === 'All' || d.documentType === this.selectedType;
+      const matchesStatus =
+        this.selectedStatus === 'All' || d.verificationStatus === this.selectedStatus;
       return matchesTerm && matchesType && matchesStatus;
     });
+    //return [];
   }
 
   // paging helpers
@@ -151,6 +174,8 @@ export class DocumentsComponent {
   }
 
   goToReview(id: number) {
+    const documentCategory = this.documents.find((d) => d.documentId === id);
+    this.sharedStateService.setDocumentInfo(documentCategory);
     this.router.navigateByUrl(`/main/documents/${id}`);
   }
 
@@ -178,7 +203,7 @@ export class DocumentsComponent {
   }
 
   // status badge classes (tailwind strings)
-  statusClass(s: DocStatus) {
+  statusClass(s: string) {
     switch (s) {
       case 'Approved':
         return 'bg-green-50 text-green-600';

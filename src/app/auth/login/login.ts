@@ -27,6 +27,7 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,7 +45,28 @@ export class Login {
       return;
     }
 
-    this.router.navigateByUrl('/main/dashboard');
+    let request = this.form.value;
+    ///request.userType = 1;
+
+    this.authService.login(request).subscribe({
+      next: (response) => {
+        // Handle successful login, e.g., store token, navigate based on user type
+        this.router.navigateByUrl('/main/dashboard');
+
+        // const userType = response.data.userType;
+        // if (userType === UserType.Admin) {
+        //   this.router.navigateByUrl('/main/admin-dashboard');
+        // } else {
+        //   this.router.navigateByUrl('/main/dashboard');
+        // }
+      },
+      error: (error) => {
+        // Handle login error, e.g., show error message
+        console.error('Login failed', error);
+      },
+    });
+
+    //this.router.navigateByUrl('/main/dashboard');
     // Replace with real auth integration
     // console.log('Login payload', this.form.value);
     // alert('Submitted: ' + JSON.stringify(this.form.value));

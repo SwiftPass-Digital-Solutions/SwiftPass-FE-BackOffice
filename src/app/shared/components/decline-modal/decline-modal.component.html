@@ -35,7 +35,7 @@
         <div class="mt-6 sm:mt-8">
           <label class="block text-base font-medium text-gray-900 mb-2">Reason for rejection</label>
           <div class="rounded-2xl ring-1 ring-gray-200 bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
-            <textarea class="w-full h-18 sm:h-20 resize-y rounded-2xl bg-transparent px-4 py-3 text-gray-900 placeholder-gray-400 outline-none
+            <textarea [(ngModel)]="declineText" class="w-full h-18 sm:h-20 resize-y rounded-2xl bg-transparent px-4 py-3 text-gray-900 placeholder-gray-400 outline-none
                      focus:ring-2 focus:ring-red-500/20 focus:ring-offset-0 focus:border-red-300"
               placeholder="Why did you reject this document?"></textarea>
           </div>
@@ -44,14 +44,14 @@
         <!-- Actions -->
         <div class="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Cancel -->
-          <button type="button" class="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 text-base sm:text-md font-medium py-2 sm:py-3
+          <button (click)="onCancel()" type="button" class="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 text-base sm:text-md font-medium py-2 sm:py-3
                    shadow-[0_1px_0_rgba(0,0,0,0.02),0_10px_18px_-10px_rgba(0,0,0,0.25)]
                    hover:bg-gray-50 active:translate-y-[1px]">
             Cancel
           </button>
 
           <!-- Reject -->
-          <button type="button" class="w-full rounded-2xl text-white text-base sm:text-md font-medium py-2 sm:py-3
+          <button (click)="onConfirm()" type="button" class="w-full rounded-2xl text-white text-base sm:text-md font-medium py-2 sm:py-3
                    bg-gradient-to-b from-red-600 to-red-700 ring-1 ring-red-700/20
                    shadow-[0_8px_16px_-6px_rgba(220,38,38,0.45)]
                    hover:from-red-600 hover:to-red-700 active:translate-y-[1px]">

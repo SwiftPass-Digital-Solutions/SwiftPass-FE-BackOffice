@@ -1,9 +1,18 @@
-import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApprovalModalComponent } from '@shared/components/approval-modal/approval-modal.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeclineModalComponent } from '@shared/components/decline-modal/decline-modal.component';
+import { DocumentService } from '@core/services/api/documents/document.service';
+import { SharedStateService } from '@shared/services/shared-state.service';
+import {
+  DocumentDetails,
+  OtherDocument,
+} from '@core/interfaces/documents/document-details.interface';
+import { Document } from '@core/interfaces/documents/documents.interface';
+import { DocumentApproval } from '@core/models/documents/document-approval.model';
 
 type DocStatus = 'Approved' | 'Pending' | 'Rejected';
 
@@ -13,7 +22,9 @@ type DocStatus = 'Approved' | 'Pending' | 'Rejected';
   imports: [CommonModule, FormsModule, ApprovalModalComponent, DeclineModalComponent],
   templateUrl: './document-review.component.html',
 })
-export class DocumentReviewComponent {
+export class DocumentReviewComponent implements OnInit {
+  toaster = inject(ToastrService);
+
   showApprovedModal = false;
   showDeclinedModal = false;
 
@@ -45,10 +56,65 @@ export class DocumentReviewComponent {
     imageUrl: 'assets/sample-nin.png',
   };
 
+  documentId: number = 0;
+  documentOwnerInfo!: Document;
+  documentInfo!: DocumentDetails;
+  selectedDocumentType!: OtherDocument;
+
   constructor(
     private location: Location,
     private router: Router,
+    private route: ActivatedRoute,
+    private documentService: DocumentService,
+    private sharedStateService: SharedStateService,
   ) {}
+
+  ngOnInit(): void {
+    this.documentOwnerInfo = this.sharedStateService.selectedDocumentInfo();
+
+    this.route.paramMap.subscribe((params: any) => {
+      this.documentId = params.get('id');
+      console.log(params);
+      this.getDocumentInfo();
+    });
+
+    //this.documentId = Number(this.route.snapshot.paramMap.get('id'));
+    // this.route.params.subscribe((params) => {
+    //   this.documentId = params['id'] || 0;
+    // });
+
+    console.log('Reviewing document ID:', this.documentId);
+  }
+
+  getDocumentInfo() {
+    this.documentService
+      .getDocumentsById(this.documentId, this.documentOwnerInfo.documentCategory || '')
+      .subscribe(
+        (res) => {
+          console.log('Document details:', res.data);
+          this.documentInfo = res.data;
+          const documentToDisplay: OtherDocument = {
+            documentId: this.documentInfo.providerDocumentDetails.id,
+            userFullName:
+              this.documentInfo.providerDocumentDetails.firstName +
+              ' ' +
+              this.documentInfo.providerDocumentDetails.lastName,
+            email: this.documentOwnerInfo.email || '',
+            documentType: this.documentInfo.providerDocumentDetails.documentType,
+            documentCategory: this.documentInfo.providerDocumentDetails.documentCategory,
+            userType: this.documentOwnerInfo.userType,
+            verificationStatus: this.documentOwnerInfo.verificationStatus || 'Pending',
+            expiryDate: this.documentInfo.providerDocumentDetails.expiryDate,
+            documentImageFileUrl: this.documentInfo.providerDocumentDetails.documentImageFileUrl,
+          };
+          this.selectedDocumentType = documentToDisplay;
+          //this.selectDocumentType(this.documentInfo.providerDocumentDetails);
+        },
+        (err) => {
+          console.error('Error fetching document details:', err);
+        },
+      );
+  }
 
   onGoToDocuments() {
     this.showApprovedModal = false;
@@ -70,8 +136,12 @@ export class DocumentReviewComponent {
     link.remove();
   }
 
+  selectDocumentType(d: OtherDocument) {
+    this.selectedDocumentType = d;
+  }
+
   // helper to get badge classes
-  badgeClass(s: DocStatus) {
+  badgeClass(s: string) {
     return {
       'bg-green-50 text-green-700': s === 'Approved',
       'bg-amber-50 text-amber-700': s === 'Pending',
@@ -90,6 +160,52 @@ export class DocumentReviewComponent {
     this.showDeclinedModal = true;
     // add real API call here
     console.log('reject');
+  }
+
+  completeApproval() {
+    const request = new DocumentApproval();
+    request.verificationStatus = 'Approved';
+    this.documentService
+      .approveOrRejectDocument(
+        this.documentId.toString(),
+        this.documentOwnerInfo.documentCategory,
+        request,
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Document approved successfully', res);
+          this.toaster.success('Document approved successfully', 'Success');
+          this.onGoToDocuments();
+        },
+        error: (err) => {
+          console.error('Error approving document', err);
+          this.toaster.error(err?.message, 'Error');
+        },
+      });
+  }
+
+  completeRejection(rejectionReason: string) {
+    const request = new DocumentApproval();
+    request.verificationStatus = 'Rejected';
+    request.rejectionRemarks = rejectionReason;
+    this.documentService
+      .approveOrRejectDocument(
+        this.documentId.toString(),
+        this.documentOwnerInfo.documentCategory,
+        request,
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Document rejected successfully', res);
+          this.toaster.success('Document rejected successfully', 'Success');
+          this.showDeclinedModal = false;
+          this.router.navigate(['/main/documents']);
+        },
+        error: (err) => {
+          console.error('Error rejecting document', err);
+          this.toaster.error(err?.message, 'Error');
+        },
+      });
   }
 
   // badgeClass(status: string) {

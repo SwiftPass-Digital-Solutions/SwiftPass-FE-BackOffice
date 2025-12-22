@@ -61,21 +61,21 @@
 <div class="md:hidden">
   <div class="bg-white rounded-2xl shadow overflow-hidden">
     <ng-container *ngFor="let d of pageItems; let last = last">
-      <div class="p-5">
+      <div class="p-5" (click)="goToReview(d.documentId)">
         <div class="flex items-start justify-between gap-4">
           <!-- left: name + email -->
           <div class="min-w-0">
-            <div class="text-gray-900 font-medium text-base leading-6">{{ d.customerName }}</div>
+            <div class="text-gray-900 font-medium text-base leading-6">{{ d.userFullName }}</div>
             <div class="text-gray-400 text-xs leading-5 truncate">{{ d.email }}</div>
           </div>
 
           <!-- right: doc type + status -->
           <div class="text-right shrink-0">
-            <div class="text-gray-700 text-sm font-medium">{{ d.docType }}</div>
+            <div class="text-gray-700 text-sm font-medium">{{ d.documentType }}</div>
             <span class="inline-flex items-center mt-2 px-3 py-1 rounded-full text-xs font-medium ring-1"
-              [ngClass]="statusPillClass(d.status)">
-              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>
-              {{ d.status }}
+              [ngClass]="statusPillClass(d.verificationStatus)">
+              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.verificationStatus)"></span>
+              {{ d.verificationStatus }}
             </span>
           </div>
         </div>
@@ -107,22 +107,22 @@
         <tbody class="text-sm text-gray-700 divide-y">
           <tr *ngFor="let d of pageItems" class="border-0 border-b-2 border-gray-100">
             <td class="py-4 px-6 align-top">
-              <div class="font-medium text-gray-900">{{ d.customerName }}</div>
+              <div class="font-medium text-gray-900">{{ d.userFullName }}</div>
               <div class="text-xs text-gray-400">{{ d.email }}</div>
             </td>
-            <td class="py-4 px-6 align-top">{{ d.docType }}</td>
+            <td class="py-4 px-6 align-top">{{ d.documentType }}</td>
             <td class="py-4 px-6 align-top">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                [ngClass]="statusClass(d.status)">
+                [ngClass]="statusClass(d.verificationStatus)">
                 <span class="w-2 h-2 rounded-full mr-2"
-                  [ngClass]="{ 'bg-green-500': d.status==='Approved', 'bg-amber-500': d.status==='Pending', 'bg-red-500': d.status==='Rejected' }"></span>
-                {{ d.status }}
+                  [ngClass]="{ 'bg-green-500': d.verificationStatus==='Approved', 'bg-amber-500': d.verificationStatus==='Pending', 'bg-red-500': d.verificationStatus==='Rejected' }"></span>
+                {{ d.verificationStatus }}
               </span>
             </td>
-            <td class="py-4 px-6 align-top">{{ d.lastUpdated }}</td>
-            <td class="py-4 px-6 align-top">{{ d.expiry }}</td>
+            <td class="py-4 px-6 align-top">{{ d.lastUpdated | date: 'MMM dd, yyyy' }}</td>
+            <td class="py-4 px-6 align-top">{{ d.expiryDate | date: 'MMM dd, yyyy' }}</td>
             <td class="py-4 px-6 align-top">
-              <button (click)="goToReview(1)"
+              <button (click)="goToReview(d.documentId)"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50 text-indigo-600 text-sm shadow-sm">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
                   <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2"
