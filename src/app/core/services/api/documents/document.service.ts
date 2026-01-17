@@ -25,7 +25,7 @@ export class DocumentService {
     );
   }
 
-  getDocumentsByUserId(userId: string) {
+  getDocumentsByUserId(userId: number) {
     return this.client.get(`${this.baseUrl}/individuals/${userId}`);
   }
 

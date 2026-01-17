@@ -65,19 +65,19 @@
       <tbody class="divide-y divide-gray-100">
         <tr *ngFor="let user of users" class="hover:bg-gray-50">
           <td class="px-6 py-4">
-            <div class="font-medium text-gray-900">{{ user.name }}</div>
+            <div class="font-medium text-gray-900">{{ user.firstName + ' ' + user.lastName }}</div>
             <div class="text-gray-500 text-sm">{{ user.email }}</div>
           </td>
           <td class="px-6 py-4">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-              [ngClass]="badgeClass(user.status)">
-              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.status)"></span>
-              {{ user.status }}
+              [ngClass]="badgeClass(user.customerStatus)">
+              <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.customerStatus)"></span>
+              {{ user.customerStatus }}
             </span>
           </td>
           <td class="px-6 py-4 font-medium text-gray-900">{{ user.spsn }}</td>
-          <td class="px-6 py-4 text-gray-900">{{ user.docs }}</td>
-          <td class="px-6 py-4 text-gray-900">{{ user.date }}</td>
+          <td class="px-6 py-4 text-gray-900">{{ user.verifiedDocumentsCount + '/' + user.totalDocumentsCount }}</td>
+          <td class="px-6 py-4 text-gray-900">{{ user.onboardedOn }}</td>
           <td class="px-6 py-4 text-right">
             <button (click)="goToDetails(1)"
               class="inline-flex items-center gap-1 px-4 py-2 text-indigo-600 bg-indigo-50 rounded-xl text-sm font-medium ring-1 ring-indigo-100">
@@ -98,18 +98,18 @@
     <div *ngFor="let user of users" class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-4">
       <div class="flex justify-between items-start">
         <div>
-          <div class="font-medium text-gray-900">{{ user.name }}</div>
+          <div class="font-medium text-gray-900">{{ user.firstName + ' ' + user.lastName }}</div>
           <div class="text-sm text-gray-500">{{ user.email }}</div>
         </div>
         <div class="text-sm font-medium text-gray-900">{{ user.spsn }}</div>
       </div>
 
       <div class="mt-2 flex items-center justify-between">
-        <div class="text-sm text-gray-700">{{ user.docType }}</div>
+        <div class="text-sm text-gray-700">{{ user.verifiedDocumentsCount + '/' + user.totalDocumentsCount }}</div>
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-          [ngClass]="badgeClass(user.status)">
-          <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.status)"></span>
-          {{ user.status }}
+          [ngClass]="badgeClass(user.customerStatus)">
+          <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(user.customerStatus)"></span>
+          {{ user.customerStatus }}
         </span>
       </div>
     </div>

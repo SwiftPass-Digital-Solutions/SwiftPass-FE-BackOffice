@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ViewDocumentModalComponent } from './view-document-modal/view-document-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentService } from '@core/services/api/documents/document.service';
+import { SharedStateService } from '@shared/services/shared-state.service';
 
 @Component({
   selector: 'app-individual-details',
@@ -23,6 +26,46 @@ export class IndividualDetailsComponent {
   ];
 
   vaultDocs = ['Nysc Certificate', 'Waec Certificate', 'Transcript', 'B.Sc'];
+
+  userId!: number;
+  customerInfo: any;
+
+  constructor(
+    private location: Location,
+    private router: Router,
+    private route: ActivatedRoute,
+    private documentService: DocumentService,
+    private sharedStateService: SharedStateService,
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params: any) => {
+      this.userId = params.get('id');
+      console.log(params);
+      this.getCustomerInfo();
+    });
+
+    //this.documentId = Number(this.route.snapshot.paramMap.get('id'));
+    // this.route.params.subscribe((params) => {
+    //   this.documentId = params['id'] || 0;
+    // });
+
+    console.log('Reviewing user ID:', this.userId);
+  }
+
+  getCustomerInfo() {
+    // Fetch document info using documentId
+    this.documentService.getDocumentsByUserId(this.userId).subscribe(
+      (response) => {
+        console.log('Document info:', response);
+        //this.customerInfo = response.data.data;
+        // You can set other properties as needed
+      },
+      (error) => {
+        console.error('Error fetching document info:', error);
+      },
+    );
+  }
 
   badgeClass(status: string) {
     return {

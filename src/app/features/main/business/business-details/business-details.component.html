@@ -9,8 +9,8 @@
     </button>
 
     <div>
-      <h1 class="text-lg sm:text-xl font-semibold text-gray-900">FinTrust Ltd</h1>
-      <p class="text-sm text-gray-500">app@domain.com</p>
+      <h1 class="text-lg sm:text-xl font-semibold text-gray-900">{{ businessInfo?.businessName }}</h1>
+      <p class="text-sm text-gray-500">{{ businessInfo?.contactEmail }}</p>
     </div>
   </div>
 
@@ -26,8 +26,9 @@
   <!-- Tab Content -->
   <div>
     <ng-container [ngSwitch]="activeTab">
-      <app-business-info *ngSwitchCase="'Business Details'"></app-business-info>
-      <app-business-document *ngSwitchCase="'Documents'"></app-business-document>
+      <app-business-info [businessInfo]="businessInfo" *ngSwitchCase="'Business Details'"></app-business-info>
+      <app-business-document [businessId]="businessInfo.businessId" [documentGroups]="businessInfo.documentCategories"
+        *ngSwitchCase="'Documents'"></app-business-document>
       <app-business-customers *ngSwitchCase="'Customers'"></app-business-customers>
       <app-business-settings *ngSwitchCase="'Settings'"></app-business-settings>
     </ng-container>

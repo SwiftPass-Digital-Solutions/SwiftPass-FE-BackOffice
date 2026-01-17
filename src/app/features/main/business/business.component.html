@@ -64,7 +64,6 @@
           <th class="px-6 py-3 text-left">Client</th>
           <th class="px-6 py-3 text-left">Status</th>
           <th class="px-6 py-3 text-left">Customers</th>
-          <th class="px-6 py-3 text-left">Credit</th>
           <th class="px-6 py-3 text-left">Onboarded On</th>
           <th class="px-6 py-3"></th>
         </tr>
@@ -72,29 +71,30 @@
       <tbody>
         <tr *ngFor="let business of businesses" class="border-t border-gray-100 hover:bg-gray-50 transition-colors">
           <td class="px-6 py-3">
-            <div class="font-medium">{{ business.name }}</div>
-            <div class="text-gray-500 text-xs">{{ business.email }}</div>
+            <div class="font-medium">{{ business.businessName }}</div>
+            <div class="text-gray-500 text-xs">{{ business.contactEmail }}</div>
           </td>
           <td class="px-6 py-3">
             <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
                    'bg-green-50 text-green-700 ring-1 ring-green-100': business.status === 'Approved',
-                   'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-100': business.status === 'Awaiting Review' || business.status === 'Pending',
+                   'bg-orange-50 text-orange-300 ring-1 ring-yellow-100': business.status === 'Awaiting Review' || business.status === 'Pending',
+                   'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-100': business.status === 'NotSubmitted',
                    'bg-red-50 text-red-700 ring-1 ring-red-100': business.status === 'Rejected'
                  }">
               <span class="w-2 h-2 rounded-full mr-2" [ngClass]="{
                       'bg-green-500': business.status === 'Approved',
-                      'bg-yellow-400': business.status === 'Awaiting Review' || business.status === 'Pending',
+                      'bg-orange-400': business.status === 'Awaiting Review' || business.status === 'Pending',
+                      'bg-yellow-500': business.status === 'NotSubmitted',
                       'bg-red-500': business.status === 'Rejected'
                     }">
               </span>
-              {{ business.status }}
+              {{ business.status == 'Pending' ? 'Awaiting Review' : business.status }}
             </div>
           </td>
-          <td class="px-6 py-3">{{ business.customers | number }}</td>
-          <td class="px-6 py-3">{{ business.credit | number }}</td>
-          <td class="px-6 py-3">{{ business.onboarded }}</td>
+          <td class="px-6 py-3">{{ business.customerCount | number }}</td>
+          <td class="px-6 py-3">{{ business.onboardedOn | date: 'MMM dd, yyyy' }}</td>
           <td class="px-6 py-3">
-            <button
+            <button (click)="goToDetails(business.businessId)"
               class="flex items-center gap-2 text-blue-600 text-sm font-medium bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
                 <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.6"
@@ -112,11 +112,12 @@
 
   <!-- 📱 Mobile Card View -->
   <div class="block md:hidden">
-    <div *ngFor="let business of businesses" class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-4 mb-4">
+    <div *ngFor="let business of businesses" (click)="goToDetails(business.businessId)"
+      class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-4 mb-4">
       <div class="flex justify-between items-center mb-3">
         <div>
-          <h3 class="text-base font-semibold text-gray-900">{{ business.name }}</h3>
-          <p class="text-sm text-gray-500">{{ business.email }}</p>
+          <h3 class="text-base font-semibold text-gray-900">{{ business.businessName }}</h3>
+          <p class="text-sm text-gray-500">{{ business.contactEmail }}</p>
         </div>
         <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
             'bg-green-50 text-green-700 ring-1 ring-green-100': business.status === 'Approved',
@@ -133,9 +134,8 @@
       </div>
 
       <div class="text-sm text-gray-700 space-y-1">
-        <p><span class="font-medium">Customers:</span> {{ business.customers | number }}</p>
-        <p><span class="font-medium">Credit:</span> {{ business.credit | number }}</p>
-        <p><span class="font-medium">Onboarded:</span> {{ business.onboarded }}</p>
+        <p><span class="font-medium">Customers:</span> {{ business.customerCount | number }}</p>
+        <p><span class="font-medium">Onboarded:</span> {{ business.onboardedOn | date: 'MMM dd, yyyy' }}</p>
       </div>
 
       <div class="mt-3 text-right">

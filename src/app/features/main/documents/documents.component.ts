@@ -5,6 +5,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Document } from '@core/interfaces/documents/documents.interface';
+import { ViewDocumentModalComponent } from '@shared/components/view-document-modal/view-document-modal.component';
+import { BusinessInfoDocument } from '@core/interfaces/business/business-info.interface';
+import { ToastrService } from 'ngx-toastr';
+import { DocumentApproval } from '@core/models/documents/document-approval.model';
 type DocStatus = 'Approved' | 'Pending' | 'Rejected';
 
 interface DocRow {
@@ -19,7 +23,7 @@ interface DocRow {
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ViewDocumentModalComponent],
   templateUrl: './documents.component.html',
 })
 export class DocumentsComponent implements OnInit {
@@ -121,14 +125,21 @@ export class DocumentsComponent implements OnInit {
   // ];
 
   documents: Document[] = [];
+  selectedDocument!: BusinessInfoDocument;
+  selectedDocumentCategory!: string;
+  showApprovalModal = false;
 
   constructor(
     private router: Router,
+    private toast: ToastrService,
     private documentService: DocumentService,
     private sharedStateService: SharedStateService,
   ) {}
 
   ngOnInit(): void {
+    this.getDocuments();
+  }
+  getDocuments() {
     this.documentService.getDocuments(this.currentPage, this.pageSize).subscribe(
       (res) => {
         this.documents = res.data.data;
@@ -138,6 +149,20 @@ export class DocumentsComponent implements OnInit {
         console.error('Error fetching documents:', err);
       },
     );
+  }
+
+  selectDeocument(doc: Document) {
+    this.selectedDocument = {
+      documentId: doc.documentId,
+      documentName: doc.documentType,
+      verificationStatus: doc.verificationStatus,
+      documentUrl: '',
+      documentSubType: 0,
+      subTypeName: doc.documentType,
+      rejectionRemarks: '',
+    };
+    this.selectedDocumentCategory = doc.documentCategory;
+    this.showApprovalModal = true;
   }
 
   // filter logic
@@ -232,15 +257,51 @@ export class DocumentsComponent implements OnInit {
     };
   }
 
-  // keep your existing desktop pill map, or reuse the mobile one:
-  // statusClass(status: string) {
-  //   return (
-  //     'ring-1 ' +
-  //     (status === 'Approved'
-  //       ? 'text-green-700 bg-green-50 ring-green-100'
-  //       : status === 'Pending'
-  //         ? 'text-amber-700 bg-amber-50 ring-amber-100'
-  //         : 'text-red-700 bg-red-50 ring-red-100')
-  //   );
-  // }
+  completeApproval() {
+    const request = new DocumentApproval();
+    request.verificationStatus = 'Approved';
+    this.documentService
+      .approveOrRejectDocument(
+        this.selectedDocument?.documentId?.toString() ?? '',
+        this.selectedDocumentCategory,
+        request,
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Document approved successfully', res);
+          this.toast.success('Document approved successfully', 'Success');
+          this.getDocuments();
+          this.showApprovalModal = false;
+          //this.onGoToDocuments();
+        },
+        error: (err) => {
+          console.error('Error approving document', err);
+          this.toast.error(err?.message, 'Error');
+        },
+      });
+  }
+
+  completeRejection(rejectionReason: string = '') {
+    const request = new DocumentApproval();
+    request.verificationStatus = 'Rejected';
+    request.rejectionRemarks = rejectionReason;
+    this.documentService
+      .approveOrRejectDocument(
+        this.selectedDocument.documentId?.toString() ?? '',
+        this.selectedDocumentCategory,
+        request,
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Document rejected successfully', res);
+          this.toast.success('Document rejected successfully', 'Success');
+          this.showApprovalModal = false;
+          this.getDocuments();
+        },
+        error: (err) => {
+          console.error('Error rejecting document', err);
+          this.toast.error(err?.message, 'Error');
+        },
+      });
+  }
 }
