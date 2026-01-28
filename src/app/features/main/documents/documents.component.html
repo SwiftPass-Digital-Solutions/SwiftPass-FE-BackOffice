@@ -105,7 +105,7 @@
           </tr>
         </thead>
         <tbody class="text-sm text-gray-700 divide-y">
-          <tr *ngFor="let d of pageItems" class="border-0 border-b-2 border-gray-100">
+          <tr *ngFor="let d of filteredDocs" class="border-0 border-b-2 border-gray-100">
             <td class="py-4 px-6 align-top">
               <div class="font-medium text-gray-900">{{ d.userFullName }}</div>
               <div class="text-xs text-gray-400">{{ d.email }}</div>
@@ -176,5 +176,8 @@
 
 
 <app-view-document-modal [document]="selectedDocument" [open]="showApprovalModal" (close)="showApprovalModal = false"
-  (approve)="completeApproval()" (reject)="completeRejection()">
+  (approve)="completeApproval()" (reject)="openRejectionModal()">
 </app-view-document-modal>
+
+<app-decline-modal [isOpen]="showDeclineModal" (confirm)="completeRejection($event)"
+  (cancel)="showDeclineModal = false"></app-decline-modal>

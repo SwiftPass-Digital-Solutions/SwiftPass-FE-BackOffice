@@ -163,12 +163,13 @@
       </svg>
     </button>
 
-    <ng-container *ngFor="let p of pages">
-      <button class="w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium"
+    <ng-container *ngFor="let p of pageList">
+      <button *ngIf="p != '...'" class="w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium"
         [ngClass]="p === currentPage ? 'bg-blue-600 text-white shadow' : 'bg-white ring-1 ring-gray-200 text-gray-700 hover:bg-gray-50'"
-        (click)="currentPage = p">
+        (click)="goToPage(p)">
         {{ p }}
       </button>
+      <div *ngIf="p === '...'" class="w-8 text-center text-gray-400">…</div>
     </ng-container>
 
     <button

@@ -15,7 +15,7 @@ export class DocumentService {
 
   getDocuments(pageNo: number, pageSize: number, userId = null) {
     return this.client.get<BaseResponse<BaseResponseList<Document>>>(
-      `${this.baseUrl}?pageNo=${pageNo}&pageSize=${pageSize}${userId ? `&userId=${userId}` : ''}`,
+      `${this.baseUrl}?PageNumber=${pageNo}&PageSize=${pageSize}${userId ? `&userId=${userId}` : ''}`,
     );
   }
 

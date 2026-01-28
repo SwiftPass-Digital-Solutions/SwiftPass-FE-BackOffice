@@ -42,4 +42,12 @@ export class ViewDocumentModalComponent {
   onClose() {
     this.close.emit();
   }
+
+  get canBeApprovedOrDeclined() {
+    console.log(this.document.verificationStatus);
+    return (
+      this.document.verificationStatus === 'Pending' ||
+      this.document.verificationStatus === 'NotSubmitted'
+    );
+  }
 }

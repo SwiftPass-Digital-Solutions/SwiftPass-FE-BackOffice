@@ -9,6 +9,7 @@ import { ViewDocumentModalComponent } from '@shared/components/view-document-mod
 import { BusinessInfoDocument } from '@core/interfaces/business/business-info.interface';
 import { ToastrService } from 'ngx-toastr';
 import { DocumentApproval } from '@core/models/documents/document-approval.model';
+import { DeclineModalComponent } from '@shared/components/decline-modal/decline-modal.component';
 type DocStatus = 'Approved' | 'Pending' | 'Rejected';
 
 interface DocRow {
@@ -23,7 +24,7 @@ interface DocRow {
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule, FormsModule, ViewDocumentModalComponent],
+  imports: [CommonModule, FormsModule, ViewDocumentModalComponent, DeclineModalComponent],
   templateUrl: './documents.component.html',
 })
 export class DocumentsComponent implements OnInit {
@@ -35,6 +36,8 @@ export class DocumentsComponent implements OnInit {
   // pagination
   pageSize = 8;
   currentPage = 1;
+  totalPages = 0;
+  totalCount = 0;
 
   docTypes = ['All', 'CAC Certificate', 'VAT Registration', 'SCUML Certificate', 'TIN Certificate'];
   statuses = ['All', 'Approved', 'Pending', 'Rejected'];
@@ -128,6 +131,7 @@ export class DocumentsComponent implements OnInit {
   selectedDocument!: BusinessInfoDocument;
   selectedDocumentCategory!: string;
   showApprovalModal = false;
+  showDeclineModal = false;
 
   constructor(
     private router: Router,
@@ -139,10 +143,12 @@ export class DocumentsComponent implements OnInit {
   ngOnInit(): void {
     this.getDocuments();
   }
-  getDocuments() {
-    this.documentService.getDocuments(this.currentPage, this.pageSize).subscribe(
+  getDocuments(currentPage = 1) {
+    this.documentService.getDocuments(currentPage, this.pageSize).subscribe(
       (res) => {
         this.documents = res.data.data;
+        this.totalPages = res.data.totalPages;
+        this.totalCount = res.data.totalCount;
         console.log('Fetched documents:', res.data.data);
       },
       (err) => {
@@ -182,9 +188,9 @@ export class DocumentsComponent implements OnInit {
   }
 
   // paging helpers
-  get totalPages() {
-    return Math.max(1, Math.ceil(this.filteredDocs.length / this.pageSize));
-  }
+  // get totalPages() {
+  //   return Math.max(1, Math.ceil(this.filteredDocs.length / this.pageSize));
+  // }
 
   get pageItems() {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -192,10 +198,8 @@ export class DocumentsComponent implements OnInit {
   }
 
   goToPage(p: number) {
-    if (p < 1 || p > this.totalPages) return;
+    this.getDocuments(p);
     this.currentPage = p;
-    // keep user at top of content after page change
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   goToReview(id: number) {
@@ -281,6 +285,11 @@ export class DocumentsComponent implements OnInit {
       });
   }
 
+  openRejectionModal() {
+    this.showApprovalModal = false;
+    this.showDeclineModal = true;
+  }
+
   completeRejection(rejectionReason: string = '') {
     const request = new DocumentApproval();
     request.verificationStatus = 'Rejected';
@@ -296,6 +305,7 @@ export class DocumentsComponent implements OnInit {
           console.log('Document rejected successfully', res);
           this.toast.success('Document rejected successfully', 'Success');
           this.showApprovalModal = false;
+          this.showDeclineModal = false;
           this.getDocuments();
         },
         error: (err) => {
