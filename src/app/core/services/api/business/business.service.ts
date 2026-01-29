@@ -19,12 +19,12 @@ export class BusinessService {
 
   getBusinesses(
     status: string | null,
-    searchTerm: string = '',
+    searchTerm: string | null = null,
     pageNumber: number = 1,
     pageSize: number = 10,
   ) {
     return this.httpClient.get<BaseResponse<BaseResponseList<Business>>>(
-      `${this.baseUrl}/Businesses?searchTerm=${searchTerm}&pageNumber=${pageNumber}&pageSize=${pageSize}&status=${status || ''}`,
+      `${this.baseUrl}/Businesses?pageNumber=${pageNumber}&pageSize=${pageSize}${status ? `&status=${status}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`,
     );
   }
 
