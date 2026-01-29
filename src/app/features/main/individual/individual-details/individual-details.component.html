@@ -9,8 +9,8 @@
 
   <!-- Header -->
   <div class="mt-4">
-    <h1 class="text-2xl font-semibold text-gray-900">Chinonso Eze</h1>
-    <p class="text-gray-500 text-sm">chinonso.eze@domain.com</p>
+    <h1 class="text-2xl font-semibold text-gray-900">{{ customerInfo?.profileDetails?.fullName }}</h1>
+    <p class="text-gray-500 text-sm">{{ customerInfo?.profileDetails?.email }}</p>
   </div>
 
   <!-- Tabs -->
@@ -37,13 +37,16 @@
       <h2 class="font-semibold text-gray-900 mb-3">Bio Data</h2>
       <div class="divide-y divide-gray-100">
         <div class="flex justify-between py-3 text-sm">
-          <span class="text-gray-500">Name</span><span class="font-medium text-gray-900">Adaobi Okafor</span>
+          <span class="text-gray-500">Name</span><span class="font-medium text-gray-900">{{
+            customerInfo?.profileDetails?.fullName }}</span>
         </div>
         <div class="flex justify-between py-3 text-sm">
-          <span class="text-gray-500">SPSN</span><span class="font-medium text-gray-900">SWP-2931</span>
+          <span class="text-gray-500">SPSN</span><span class="font-medium text-gray-900">{{
+            customerInfo?.profileDetails?.spsn }}</span>
         </div>
         <div class="flex justify-between py-3 text-sm">
-          <span class="text-gray-500">Onboarded</span><span class="font-medium text-gray-900">Aug 5, 2025</span>
+          <span class="text-gray-500">Onboarded</span><span class="font-medium text-gray-900">{{
+            customerInfo?.profileDetails?.onboardedDate | date: 'MMM dd, yyyy'}}</span>
         </div>
       </div>
     </div>
@@ -64,35 +67,66 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          <tr *ngFor="let d of documents">
-            <td class="px-6 py-3">{{ d.type }}</td>
+          <tr *ngFor="let d of filteredDocuments" class="hover:bg-gray-50">
+            <td class="px-6 py-3">{{ d.documentType }}</td>
             <td class="px-6 py-3">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                [ngClass]="badgeClass(d.status)">
-                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.status)"></span>{{ d.status }}
+                [ngClass]="badgeClass(d.verificationStatus)">
+                <span class="w-2 h-2 rounded-full mr-2" [ngClass]="dotClass(d.verificationStatus)"></span>{{
+                d.verificationStatus }}
               </span>
             </td>
-            <td class="px-6 py-3">{{ d.updated }}</td>
-            <td class="px-6 py-3">{{ d.expiry }}</td>
+            <td class="px-6 py-3">{{ d.lastUpdated }}</td>
+            <td class="px-6 py-3">{{ d.expiryDate }}</td>
             <td class="px-6 py-3 text-right">
-              <button (click)="openModal()" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-medium">View</button>
+              <button (click)="selectCustomerDocument(d)"
+                class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-medium">View</button>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-center mt-6 gap-2">
+        <button
+          class="w-10 h-10 flex items-center justify-center bg-white ring-1 ring-gray-200 rounded-xl shadow-sm hover:bg-gray-50">
+          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none">
+            <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <ng-container *ngFor="let p of pageList">
+          <button *ngIf="p != '...'" class="w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium"
+            [ngClass]="p === pageNumber ? 'bg-blue-600 text-white shadow' : 'bg-white ring-1 ring-gray-200 text-gray-700 hover:bg-gray-50'"
+            (click)="goToPage(p)">
+            {{ p }}
+          </button>
+          <div *ngIf="p === '...'" class="w-8 text-center text-gray-400">…</div>
+        </ng-container>
+
+        <button
+          class="w-10 h-10 flex items-center justify-center bg-white ring-1 ring-gray-200 rounded-xl shadow-sm hover:bg-gray-50">
+          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile -->
     <div class="sm:hidden space-y-3">
-      <div *ngFor="let d of documents" class="bg-white rounded-2xl p-4 shadow ring-1 ring-gray-100">
+      <div *ngFor="let d of customerInfo?.documents" class="bg-white rounded-2xl p-4 shadow ring-1 ring-gray-100">
         <div class="flex justify-between items-center">
-          <span class="text-gray-900 font-medium">{{ d.type }}</span>
+          <span class="text-gray-900 font-medium">{{ d.documentType }}</span>
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-            [ngClass]="badgeClass(d.status)">
-            <span class="w-2 h-2 rounded-full mr-1" [ngClass]="dotClass(d.status)"></span>{{ d.status }}
+            [ngClass]="badgeClass(d.verificationStatus)">
+            <span class="w-2 h-2 rounded-full mr-1" [ngClass]="dotClass(d.verificationStatus)"></span>{{
+            d.verificationStatus }}
           </span>
         </div>
-        <div class="mt-2 text-sm text-gray-500">{{ d.updated }} • Expiry: {{ d.expiry }}</div>
+        <div class="mt-2 text-sm text-gray-500">{{ d.lastUpdated }} • Expiry: {{ d.expiryDate }}</div>
       </div>
     </div>
   </section>
@@ -112,7 +146,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          <tr *ngFor="let s of spsnUsage" class="hover:bg-gray-50">
+          <tr *ngFor="let s of customerInfo?.recentSpsnUsage" class="hover:bg-gray-50">
             <!-- Partner -->
             <td class="px-6 py-4 font-medium text-gray-900">
               <div class="flex items-center gap-2">
@@ -178,21 +212,22 @@
 
   <!-- === Vault Tab === -->
   <section *ngIf="activeTab==='vault'" class="mt-6">
-    <div class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-5">
+    <div *ngFor="let v of customerInfo?.vaults" class="bg-white rounded-2xl shadow ring-1 ring-gray-100 p-5">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center gap-2">
           <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24">
             <path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.4" />
             <path d="M8 8h8v8H8z" stroke="currentColor" stroke-width="1.4" />
           </svg>
-          <span class="font-semibold text-gray-900">Education</span>
+          <span class="font-semibold text-gray-900">{{ v.name }}</span>
         </div>
-        <span class="text-sm text-gray-400">2 documents</span>
+        <span class="text-sm text-gray-400">{{ v.documents.length }} documents</span>
       </div>
       <div class="space-y-2">
-        <div *ngFor="let doc of vaultDocs" class="flex justify-between items-center bg-gray-50 rounded-xl px-4 py-2">
-          <span class="text-gray-800 text-sm">{{ doc }}</span>
-          <button class="flex items-center gap-1 text-indigo-600 text-sm font-medium">
+        <div *ngFor="let doc of v.documents" class="flex justify-between items-center bg-gray-50 rounded-xl px-4 py-2">
+          <span class="text-gray-800 text-sm">{{ doc.name }}</span>
+          <button (click)="selectVaultDocument(doc)"
+            class="flex items-center gap-1 text-indigo-600 text-sm font-medium">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
               <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z" stroke="currentColor" stroke-width="1.2" />
               <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" />
@@ -205,5 +240,9 @@
   </section>
 </main>
 
-<app-view-document-modal [isOpen]="isModalOpen" [documentImage]="'/assets/nin-sample.png'" (close)="closeModal()"
-  (reject)="onReject()"></app-view-document-modal>
+<app-view-document-modal [document]="selectedDocument" [open]="showDocumentModal" (close)="showDocumentModal = false"
+  (approve)="onApprove()" (reject)="onReject()">
+</app-view-document-modal>
+
+<app-decline-modal [isOpen]="showDeclineModal" (confirm)="completeRejection($event)"
+  (cancel)="showDeclineModal = false"></app-decline-modal>

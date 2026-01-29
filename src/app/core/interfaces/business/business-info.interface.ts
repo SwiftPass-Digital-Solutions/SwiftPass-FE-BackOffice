@@ -23,6 +23,7 @@ export interface BusinessInfoDocumentCategory {
 export interface BusinessInfoDocument {
   documentId?: number;
   documentSubType: number;
+  documentCategory: string;
   subTypeName: string;
   documentName?: string;
   documentUrl?: string;

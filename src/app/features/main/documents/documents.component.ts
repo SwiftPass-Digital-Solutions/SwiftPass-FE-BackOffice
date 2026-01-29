@@ -161,6 +161,7 @@ export class DocumentsComponent implements OnInit {
     this.selectedDocument = {
       documentId: doc.documentId,
       documentName: doc.documentType,
+      documentCategory: doc.documentCategory,
       verificationStatus: doc.verificationStatus,
       documentUrl: '',
       documentSubType: 0,

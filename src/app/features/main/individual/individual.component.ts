@@ -46,6 +46,10 @@ export class IndividualComponent implements OnInit {
   pn = 1;
   ps = 10;
 
+  totalPages = 0;
+  searchTerm: string | null = null;
+  status = '';
+
   constructor(
     private router: Router,
     private individualService: IndividualService,
@@ -56,15 +60,36 @@ export class IndividualComponent implements OnInit {
   }
 
   getindividuals() {
-    this.individualService.getIndividuals().subscribe(
+    this.individualService.getIndividuals(this.searchTerm, this.pn, this.ps).subscribe(
       (response) => {
         console.log(response);
         this.users = response.data.data;
+        this.totalPages = response.data.totalPages;
       },
       (err) => {
         console.error(err);
       },
     );
+  }
+
+  get pageList(): (number | '...')[] {
+    const pages = this.totalPages;
+    const cur = this.pn;
+    if (pages <= 6) return Array.from({ length: pages }, (_, i) => i + 1);
+    const list: (number | '...')[] = [];
+    list.push(1);
+    if (cur > 3) list.push('...');
+    const start = Math.max(2, cur - 1);
+    const end = Math.min(pages - 1, cur + 1);
+    for (let i = start; i <= end; i++) list.push(i);
+    if (cur < pages - 2) list.push('...');
+    list.push(pages);
+    return list;
+  }
+
+  goToPage(p: number) {
+    this.pn = p;
+    this.getindividuals();
   }
 
   badgeClass(status: string) {
